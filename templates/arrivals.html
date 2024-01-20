@@ -6,6 +6,11 @@
 </head>
 
 <style type="text/css">
+  .htmx-swapping {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+  }
+
   .sr-only {
     border: 0;
     clip: rect(0 0 0 0);
@@ -33,6 +38,20 @@
     flex: 1;
     width: 100%;
     display: flex;
+  }
+
+
+  header {
+    display: flex;
+
+    & h1 {
+      flex: 1;
+    }
+
+    & p {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
   }
 
   h1 {
@@ -90,10 +109,17 @@
     }
   }
 </style>
+<script src="{{url_for('static', filename='htmx.min.js')}}"></script>
 
-<body>
+<body hx-get="/" hx-trigger="every 3s" hx-swap="morph:innerHTML">
   <header>
-    <h1>Next Train Arrivals: Jay St—MetroTech</h1>
+    <div>
+
+      <h1>
+        Next Train Arrivals: Jay St—MetroTech</h1>
+      <p>Last updated: {{last_updated}}</p>
+    </div>
+    <img alt="loading" class="htmx-indicator" src="{{url_for('static', filename='spinner.svg')}}">
   </header>
   <main>
     <table class="arrivals">

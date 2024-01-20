@@ -15,6 +15,7 @@ ApiKey = os.environ["API_KEY"]
 
 @cachetools.func.ttl_cache(maxsize=2, ttl=60)
 def get_arrivals():
+    print(str(datetime.now()), "getting arrivals")
     feedACE = NYCTFeed("A", api_key=ApiKey)
     feedF = NYCTFeed("F", api_key=ApiKey)
     feedR = NYCTFeed("R", api_key=ApiKey)
@@ -36,4 +37,4 @@ def hello_world():
     arrivals = get_arrivals()
     relative_arrivals = [[route, dest, arrival_time, (arrival_time - datetime.now()).seconds // 60] for [route, dest, arrival_time] in arrivals]
     # (update.arrival - datetime.now()).seconds // 60
-    return render_template('arrivals.html', arrivals=sorted([arr for arr in relative_arrivals if arr[3] < 30], key=lambda arr: arr[3]))
+    return render_template('arrivals.html', last_updated=str(datetime.now()), arrivals=sorted([arr for arr in relative_arrivals if arr[3] < 30], key=lambda arr: arr[2]))
