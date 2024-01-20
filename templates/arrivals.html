@@ -102,8 +102,8 @@
         <tr class="arrival">
           <td class="line line-{{arrival[0]}}"><span class="sr-only">{{arrival[0]}}</span></td>
           <td class="dest">{{arrival[1]}}</td>
-          {% if arrival[2] < 1 %} <td class="time time-due">due</td> {% else %}
-            <td class="time">{{arrival[2]}} <small>min</small>
+          {% if arrival[3] < 1 %} <td class="time time-due">due</td> {% else %}
+            <td class="time"><time datetime="{{arrival[2]}}">{{arrival[3]}} <small>min</small></time>
               {% endif %}
         </tr>
         {% endfor %}
