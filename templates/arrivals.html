@@ -200,7 +200,8 @@
 
 </script>
 
-<body>
+
+<body hx-get="{{url_for('countdown', mode=mode)}}" hx-trigger="every 30s" hx-swap="morph:innerHTML">
   <header>
     <div>
       <h1>
