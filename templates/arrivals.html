@@ -240,16 +240,17 @@
   dayjs.extend(relativeTime);
   dayjs.extend(utc);
   setInterval(function () {
-    document.querySelectorAll("time:not(.replace)").forEach(time => {
-      const offset = dayjs(time.getAttribute("datetime")).diff(dayjs.utc(), 'm');
-      time.querySelector(".arrival-time-mins").innerText = offset;
+    // document.querySelectorAll("time:not(.replace)").forEach(time => {
+    //   const offset = dayjs(time.getAttribute("datetime")).diff(dayjs.utc(), 'm');
+    //   time.querySelector(".arrival-time-mins").innerText = offset;
 
-      if (offset === 0) {
-        time.innerText = "due";
-      } else if (offset < 5) {
-        time.classList.add("arrival-time-due");
-      }
-    });
+    //   if (offset === 0) {
+    //     time.innerText = "due";
+    //   } else if (offset < 5) {
+    //     time.classList.add("arrival-time-due");
+    //   }
+    // });
+    // NOT WORKING idk whY!!
     document.querySelectorAll("time.replace").forEach(time => {
       time.innerText = dayjs(time.getAttribute("datetime")).fromNow();
     })
