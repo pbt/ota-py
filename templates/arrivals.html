@@ -38,12 +38,15 @@
     width: 1px;
   }
 
-  body {
+  * {
     box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
     background: #161616;
     color: #eee;
     display: flex;
-    padding: 2ch;
     flex-direction: column;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
@@ -53,11 +56,12 @@
     font-size: 2rem;
     flex: 1;
     width: 100%;
+    padding: 1vmax;
   }
-
 
   header {
     display: flex;
+    border-top: 1vh solid rgb(255 255 255 / 0.9);
 
     & div {
       flex: 1;
@@ -67,10 +71,6 @@
       font-size: 1rem;
       opacity: 0.9;
     }
-  }
-
-  h1 {
-    font-size: 2.5rem;
   }
 
   h1,
@@ -85,7 +85,6 @@
 
   .route {
     background-repeat: no-repeat;
-
     background-position: center;
     background-size: contain;
     width: 3ch;
@@ -108,6 +107,10 @@
       background-image: url('/static/FX.svg');
     }
 
+    &.route-N {
+      background-image: url('/static/N.svg');
+    }
+
     &.route-R {
       background-image: url('/static/R.svg');
     }
@@ -116,6 +119,10 @@
       background-image: url('/static/W.svg');
     }
 
+  }
+
+  h1 {
+    font-size: clamp(1rem, 3vh, 10rem);
   }
 
   section.arrivals-simple {
@@ -134,6 +141,7 @@
     }
   }
 
+
   .arrival-time {
     font-variant-numeric: tabular-nums;
     -moz-font-feature-settings: "tnum";
@@ -143,21 +151,28 @@
 
     &.arrival-time-due {
       font-weight: bold;
-      font-size: 80%;
+      border-radius: 0.5ch;
+      padding: 0 0.5ch;
       background-color: rgb(255 255 255 / 0.1);
     }
   }
 
   .arrivals-detailed {
 
+    h2 {
+      border-bottom: 2px solid rgb(255 255 255 / 0.2);
+      margin-bottom: 0.5rem;
+      padding-bottom: 1vh;
+    }
+
     .route {
-      width: 15vw;
-      height: 15vw;
+      width: clamp(2ch, 10vw, 20ch);
+      height: clamp(2ch, 10vw, 20ch);
     }
 
     & .route-arrivals {
       display: flex;
-      gap: 1ch;
+      gap: 2ch;
       margin-bottom: 1ch;
     }
 
@@ -167,13 +182,21 @@
 
     .board {
       &>h4 {
-        padding-top: 1ch;
+        padding-top: 0.5rem;
+      }
+
+      .route-arrivals {
+        padding-bottom: 0.5rem;
       }
 
       font-size: clamp(1rem, 10vw, 3rem);
     }
 
   }
+
+  footer {
+    border-top: 2px solid rgb(255 255 255 / 0.2);
+    text-align: center;
   }
 </style>
 <script src="{{url_for('static', filename='htmx.min.js')}}"></script>
@@ -220,11 +243,7 @@
 <body hx-get="{{url_for('countdown', mode=mode)}}" hx-trigger="every 30s" hx-swap="morph:innerHTML">
   <header>
     <div>
-      <h1>
-        Next Train Arrivals: Jay St—MetroTech</h1>
-      <p>Last updated: <time class="replace" datetime="{{last_updated}}">{{last_updated}}</time>. Show: <a
-          href="/?mode=simple">as a
-          list</a>, <a href="/?mode=detailed">grouped</a>.</p>
+      <h1>Jay St—MetroTech </h1>
     </div>
     <img alt="loading" class="htmx-indicator" src="{{url_for('static', filename='spinner.svg')}}">
   </header>
@@ -278,6 +297,11 @@
     </section>
     {% endif %}
   </main>
+  <footer>
+    <p>Last updated: <time class="replace" datetime="{{last_updated}}">{{last_updated}}</time>. Show: <a
+        href="/?mode=simple">as a
+        list</a>, <a href="/?mode=detailed">grouped</a>.</p>
+  </footer>
 </body>
 
 </html>
