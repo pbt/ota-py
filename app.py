@@ -56,8 +56,8 @@ def countdown():
         {
             "route": route,
             "dest": dest,
-            "arrival_time": arrival_time.to("utc"),
-            "relative": (arrival_time.to("utc") - arrow.utcnow()).seconds // 60,
+            "arrival_time": arrival_time,
+            "relative": (arrival_time - arrow.utcnow()).seconds // 60,
             "direction": direction,
             "trip_id": trip_id,
         }
