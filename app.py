@@ -8,7 +8,7 @@ from nyct_gtfs import NYCTFeed
 from nyct_gtfs.gtfs_static_types import Stations
 
 from datetime import datetime, date, time, timezone, tzinfo, timedelta
-import pendulum
+import arrow
 from itertools import groupby
 
 import cachetools.func
@@ -18,7 +18,7 @@ ApiKey = os.environ["API_KEY"]
 
 @cachetools.func.ttl_cache(maxsize=2, ttl=60)
 def get_arrivals():
-    print(str(datetime.now()), "getting arrivals")
+    print(str(arrow.utcnow()), "getting arrivals")
     feedACE = NYCTFeed("A", api_key=ApiKey)
     feedF = NYCTFeed("F", api_key=ApiKey)
     feedR = NYCTFeed("R", api_key=ApiKey)
@@ -46,7 +46,7 @@ def get_arrivals():
         )
         for train in trains
     ]
-    return (arrivals, pendulum.now("America/New_York"))
+    return (arrivals, arrow.utcnow())
 
 
 @app.route("/")
@@ -65,8 +65,8 @@ def countdown():
     ]
     return render_template(
         "arrivals.html",
-        mode=request.args.get("mode", "simple"),
-        last_updated=str(last_updated),
+        mode=request.args.get("mode", "detailed"),
+        last_updated=(last_updated, last_updated.humanize(arrow.utcnow())),
         arrivals=sorted(
             [arr for arr in relative_arrivals if arr["relative"] < 30],
             key=lambda arr: arr["arrival_time"],

@@ -1,0 +1,26 @@
+{
+  "short_name": "OTA",
+  "name": "The Octopus Transit Authority",
+  "icons": [
+    {
+      "src": "/static/icons.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/static/icons-128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "/static/icons-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/?source=pwa",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#C84800",
+  "description": ""
+}
