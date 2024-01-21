@@ -37,7 +37,7 @@ def get_arrivals():
             train.route_id,
             train.headsign_text if train.headsign_text else train.shape_id,
             [
-                update.arrival
+                arrow.get(update.arrival, "America/New_York")
                 for update in train.stop_time_updates
                 if any([update.stop_id == stop for stop in stops])
             ][0],
@@ -56,8 +56,8 @@ def countdown():
         {
             "route": route,
             "dest": dest,
-            "arrival_time": arrival_time,
-            "relative": (arrival_time - datetime.now()).seconds // 60,
+            "arrival_time": arrival_time.to("utc"),
+            "relative": (arrival_time.to("utc") - arrow.utcnow()).seconds // 60,
             "direction": direction,
             "trip_id": trip_id,
         }

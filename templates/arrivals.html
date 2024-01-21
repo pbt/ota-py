@@ -236,10 +236,12 @@
 <script type="module">
   import dayjs from "https://esm.sh/dayjs@1";
   import relativeTime from "https://esm.sh/dayjs@1/plugin/relativeTime";
+  import utc from "https://esm.sh/dayjs@1/plugin/utc";
   dayjs.extend(relativeTime);
+  dayjs.extend(utc);
   setInterval(function () {
     document.querySelectorAll("time:not(.replace)").forEach(time => {
-      const offset = dayjs(time.getAttribute("datetime")).diff(dayjs(), 'm');
+      const offset = dayjs(time.getAttribute("datetime")).diff(dayjs.utc(), 'm');
       time.querySelector(".arrival-time-mins").innerText = offset;
 
       if (offset === 0) {
