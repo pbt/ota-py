@@ -282,17 +282,17 @@
           <h3>
             <div class="route route-{{route}}"><span class="sr-only">{{route}}</span></div>
           </h3>
-          <div class="board">
 
-            {% for dest, d_arrivals in r_arrivals|groupby("dest") %}
+          {% for dest, d_arrivals in r_arrivals|groupby("dest") %}
+          <div class="board">
             <h4>{{dest}}</h4>
             <div class="arrival-times">{% for arrival in d_arrivals|sort(attribute="relative")%}
               <time class="arrival-time {%if arrival.relative < 5 %}arrival-time-due{%endif%}"
                 datetime="{{arrival.arrival_time}}">{% if arrival.relative < 1 %} due {% else %} <span
                   class="arrival-time-mins">{{arrival.relative}}</span> <small>min</small>{%
                   endif %}</time>
-              {% endfor %}
             </div>
+            {% endfor %}
             {% endfor %}
           </div>
         </div>
