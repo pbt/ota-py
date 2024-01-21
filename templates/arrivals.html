@@ -80,6 +80,7 @@
   h5,
   h6 {
     margin: 0;
+    letter-spacing: -0.01ch;
   }
 
   .route {
@@ -149,6 +150,11 @@
 
   .arrivals-detailed {
 
+    .route {
+      width: 15vw;
+      height: 15vw;
+    }
+
     & .route-arrivals {
       display: flex;
       gap: 1ch;
@@ -157,6 +163,14 @@
 
     & .arrival-times .arrival-time:not(:last-child):after {
       content: ',';
+    }
+
+    .board {
+      &>h4 {
+        padding-top: 1ch;
+      }
+
+      font-size: clamp(1rem, 10vw, 3rem);
     }
 
   }
@@ -225,7 +239,7 @@
         <h3>
           <div class="route route-{{route}}"><span class="sr-only">{{route}}</span></div>
         </h3>
-        <div>
+        <div class="board">
 
           {% for dest, d_arrivals in r_arrivals|groupby("dest") %}
           <h4>{{dest}}</h4>
