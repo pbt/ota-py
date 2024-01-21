@@ -286,7 +286,7 @@
           <div class="board">
             <h4>{{dest}}</h4>
             <div class="arrival-times">{% for arrival in d_arrivals|sort(attribute="relative")%}
-              <time class="arrival-time {%if arrival.relative < 5 %}arrival-time-due{%endif%}"
+              <time class="arrival-time {%if arrival.relative < 7 %}arrival-time-due{%endif%}"
                 datetime="{{arrival.arrival_time}}">{% if arrival.relative < 1 %} due {% else %} <span
                   class="arrival-time-mins">{{arrival.relative}}</span> <small>min</small>{%
                   endif %}</time>
