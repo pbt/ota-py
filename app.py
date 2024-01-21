@@ -8,6 +8,7 @@ from nyct_gtfs import NYCTFeed
 from nyct_gtfs.gtfs_static_types import Stations
 
 from datetime import datetime, date, time, timezone, tzinfo, timedelta
+import pendulum
 from itertools import groupby
 
 import cachetools.func
@@ -45,7 +46,7 @@ def get_arrivals():
         )
         for train in trains
     ]
-    return (arrivals, datetime.now())
+    return (arrivals, pendulum.now("America/New_York"))
 
 
 @app.route("/")
