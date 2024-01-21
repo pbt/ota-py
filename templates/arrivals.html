@@ -6,6 +6,20 @@
 </head>
 
 <style type="text/css">
+  time.replace {
+    animation: 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) 0s flash;
+  }
+
+  @keyframes flash {
+    from {
+      background: rgb(255 255 255 / 0.1);
+    }
+
+    to {
+      background: transparent;
+    }
+  }
+
   .htmx-swapping {
     opacity: 0;
     transition: opacity 1s ease-out;
@@ -37,14 +51,13 @@
     font-size: 2rem;
     flex: 1;
     width: 100%;
-    display: flex;
   }
 
 
   header {
     display: flex;
 
-    & h1 {
+    & div {
       flex: 1;
     }
 
@@ -58,83 +71,195 @@
     font-size: 2.5rem;
   }
 
-  table.arrivals {
-    flex: 1;
-    line-height: 2.5rem;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+  }
 
-    & .line {
-      background-repeat: no-repeat;
+  .route {
+    background-repeat: no-repeat;
 
-      background-position: center;
-      background-size: contain;
-      width: 3ch;
-    }
+    background-position: center;
+    background-size: contain;
+    width: 3ch;
+    height: 3ch;
 
-    & .line-A {
+
+    &.route-A {
       background-image: url('/static/A.svg');
     }
 
-    & .line-C {
+    &.route-C {
       background-image: url('/static/C.svg');
     }
 
-    & .line-F {
+    &.route-F {
       background-image: url('/static/F.svg');
     }
 
-    & .line-FX {
+    &.route-FX {
       background-image: url('/static/FX.svg');
     }
 
-    & .line-R {
+    &.route-R {
       background-image: url('/static/R.svg');
     }
 
-    & .dest {
-      font-weight: 600;
-      padding: 1ch;
+    &.route-W {
+      background-image: url('/static/W.svg');
     }
 
-    & .time {
-      font-variant-numeric: tabular-nums;
-      -moz-font-feature-settings: "tnum";
-      -webkit-font-feature-settings: "tnum";
-      font-feature-settings: "tnum";
-      text-align: right;
+  }
 
-      &.time-due {
-        font-weight: bold;
-        font-size: 80%;
+  section.arrivals-simple {
+    display: flex;
+
+    table.arrivals {
+      flex: 1;
+      line-height: 2.5rem;
+
+
+      & .dest {
+        font-weight: 600;
+        padding: 1ch;
       }
+
     }
+  }
+
+  .arrival-time {
+    font-variant-numeric: tabular-nums;
+    -moz-font-feature-settings: "tnum";
+    -webkit-font-feature-settings: "tnum";
+    font-feature-settings: "tnum";
+    text-align: right;
+
+    &.arrival-time-due {
+      font-weight: bold;
+      font-size: 80%;
+      background-color: rgb(255 255 255 / 0.1);
+    }
+  }
+
+  .arrivals-detailed {
+
+    & .route-arrivals {
+      display: flex;
+      gap: 1ch;
+      margin-bottom: 1ch;
+    }
+
+    & .arrival-times .arrival-time:not(:last-child):after {
+      content: ',';
+    }
+
+  }
   }
 </style>
 <script src="{{url_for('static', filename='htmx.min.js')}}"></script>
+<script type="module">
+  import dayjs from "https://esm.sh/dayjs@1";
+  import relativeTime from "https://esm.sh/dayjs@1/plugin/relativeTime";
+  dayjs.extend(relativeTime);
 
-<body hx-get="/" hx-trigger="every 30s" hx-swap="morph:innerHTML">
+  function replaceTimes() {
+    document.querySelectorAll("time.replace").forEach((time) => {
+      time.innerText = dayjs(time.getAttribute("datetime")).fromNow()
+    });
+  }
+
+  setInterval(replaceTimes, 1000);
+
+  document.addEventListener("DOMContentLoaded", function () {
+    replaceTimes();
+
+    const targetNode = document.querySelector('body');
+
+    const config = {
+      attributes: true,
+      childList: true,
+      characterData: true
+    };
+
+    const callback = mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type === 'childList') {
+          replaceTimes();
+        }
+      });
+    }
+
+    const observer = new MutationObserver(callback);
+
+    observer.observe(targetNode, config);
+  })
+
+</script>
+
+<body>
   <header>
     <div>
-
       <h1>
         Next Train Arrivals: Jay St—MetroTech</h1>
-      <p>Last updated: {{last_updated}}</p>
+      <p>Last updated: <time class="replace" datetime="{{last_updated}}">{{last_updated}}</time>. Show: <a
+          href="/?mode=simple">as a
+          list</a>, <a href="/?mode=detailed">grouped</a>.</p>
     </div>
     <img alt="loading" class="htmx-indicator" src="{{url_for('static', filename='spinner.svg')}}">
   </header>
   <main>
-    <table class="arrivals">
-      <tbody>
-        {% for arrival in arrivals %}
-        <tr class="arrival">
-          <td class="line line-{{arrival[0]}}"><span class="sr-only">{{arrival[0]}}</span></td>
-          <td class="dest">{{arrival[1]}}</td>
-          {% if arrival[3] < 1 %} <td class="time time-due">due</td> {% else %}
-            <td class="time"><time datetime="{{arrival[2]}}">{{arrival[3]}} <small>min</small></time>
-              {% endif %}
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+
+    {% if mode == "detailed" %}
+    <section class="arrivals-detailed">
+      {% for direction, dir_arrivals in arrivals|groupby("direction") %}
+      <h2>{% if direction == "N" %}Manhattan-bound{% else %}Brooklyn-bound{% endif %}</h2>
+      {% for route, r_arrivals in dir_arrivals|groupby("route") %}
+      <div class="route-arrivals" id="arrivals-{{route}}">
+        <h3>
+          <div class="route route-{{route}}"><span class="sr-only">{{route}}</span></div>
+        </h3>
+        <div>
+
+          {% for dest, d_arrivals in r_arrivals|groupby("dest") %}
+          <h4>{{dest}}</h4>
+          <div class="arrival-times">{% for arrival in d_arrivals|sort(attribute="relative")%}
+            <time class="arrival-time {%if arrival.relative < 1 %}arrival-time-due{%endif%}"
+              datetime="{{arrival.arrival_time}}">{% if arrival.relative < 1 %} due {% else %} {{arrival.relative}}
+                <small>
+                min</small> {% endif %}</time>
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+      {% endfor %}
+    </section>
+    {% else %}
+    <section class="arrivals-simple">
+      <table class="arrivals">
+        <tbody>
+          {% for arrival in arrivals %}
+          <tr class="arrival" id="arrival-{{arrival.trip_id}}">
+            <td class="route route-{{arrival.route}}"><span class="sr-only">{{arrival.route}}</span></td>
+            <td class="dest">{{arrival.dest}}</td>
+
+            <td class="time">
+              <time class="arrival-time {%if arrival.relative < 1 %}arrival-time-due{%endif%}"
+                datetime="{{arrival.arrival_time}}">{% if arrival.relative < 1 %} due {% else %} {{arrival.relative}}
+                  <small>min</small> {% endif %}</time>
+            </td>
+
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+    {% endif %}
   </main>
 </body>
 

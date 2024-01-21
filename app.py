@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+
 app = Flask(__name__)
 
 import os
@@ -12,6 +13,7 @@ from itertools import groupby
 import cachetools.func
 
 ApiKey = os.environ["API_KEY"]
+
 
 @cachetools.func.ttl_cache(maxsize=2, ttl=60)
 def get_arrivals():
@@ -27,14 +29,45 @@ def get_arrivals():
     stops = ["A41N", "A41S", "R29N", "R29S"]
 
     for stop in stops:
-      for feed in [feedACE, feedF, feedR]:
-        trains += feed.filter_trips(headed_for_stop_id=stop, underway=True)
-    arrivals = [[train.route_id, train.headsign_text if train.headsign_text else train.shape_id, [update.arrival for update in train.stop_time_updates if any([update.stop_id == stop for stop in stops])][0]] for train in trains]
-    return arrivals
+        for feed in [feedACE, feedF, feedR]:
+            trains += feed.filter_trips(headed_for_stop_id=stop, underway=True)
+    arrivals = [
+        (
+            train.route_id,
+            train.headsign_text if train.headsign_text else train.shape_id,
+            [
+                update.arrival
+                for update in train.stop_time_updates
+                if any([update.stop_id == stop for stop in stops])
+            ][0],
+            train.direction,
+            train.trip_id,
+        )
+        for train in trains
+    ]
+    return (arrivals, datetime.now())
 
-@app.route('/')
-def hello_world():
-    arrivals = get_arrivals()
-    relative_arrivals = [[route, dest, arrival_time, (arrival_time - datetime.now()).seconds // 60] for [route, dest, arrival_time] in arrivals]
-    # (update.arrival - datetime.now()).seconds // 60
-    return render_template('arrivals.html', last_updated=str(datetime.now()), arrivals=sorted([arr for arr in relative_arrivals if arr[3] < 30], key=lambda arr: arr[2]))
+
+@app.route("/")
+def countdown():
+    arrivals, last_updated = get_arrivals()
+    relative_arrivals = [
+        {
+            "route": route,
+            "dest": dest,
+            "arrival_time": arrival_time,
+            "relative": (arrival_time - datetime.now()).seconds // 60,
+            "direction": direction,
+            "trip_id": trip_id,
+        }
+        for (route, dest, arrival_time, direction, trip_id) in arrivals
+    ]
+    return render_template(
+        "arrivals.html",
+        mode=request.args.get("mode", "simple"),
+        last_updated=str(last_updated),
+        arrivals=sorted(
+            [arr for arr in relative_arrivals if arr["relative"] < 30],
+            key=lambda arr: arr["arrival_time"],
+        ),
+    )
