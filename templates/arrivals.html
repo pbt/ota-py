@@ -254,7 +254,7 @@
     document.querySelectorAll("time.replace").forEach(time => {
       time.innerText = dayjs(time.getAttribute("datetime")).fromNow();
     })
-  }, 1000);
+  }, 10000);
 </script>
 <link rel="manifest" href="{{url_for('static', filename='manifest.json')}}">
 
