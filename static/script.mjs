@@ -17,4 +17,4 @@ setInterval(function() {
   document.querySelectorAll("time.replace").forEach(time => {
     time.innerText = dayjs(time.getAttribute("datetime")).fromNow();
   })
-}, 10000);
+}, 1000);
