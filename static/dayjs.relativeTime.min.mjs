@@ -1,0 +1,8 @@
+/**
+ * Bundled by jsDelivr using Rollup v2.79.1 and Terser v5.19.2.
+ * Original file: /npm/dayjs@1.11.10/plugin/relativeTime.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self&&self;var r={exports:{}},e=r.exports=function(r,e,t){r=r||{};var n=e.prototype,o={future:"in %s",past:"%s ago",s:"a few seconds",m:"a minute",mm:"%d minutes",h:"an hour",hh:"%d hours",d:"a day",dd:"%d days",M:"a month",MM:"%d months",y:"a year",yy:"%d years"};function d(r,e,t,o){return n.fromToBase(r,e,t,o)}t.en.relativeTime=o,n.fromToBase=function(e,n,d,a,f){for(var i,u,s,l=d.$locale().relativeTime||o,h=r.thresholds||[{l:"s",r:44,d:"second"},{l:"m",r:89},{l:"mm",r:44,d:"minute"},{l:"h",r:89},{l:"hh",r:21,d:"hour"},{l:"d",r:35},{l:"dd",r:25,d:"day"},{l:"M",r:45},{l:"MM",r:10,d:"month"},{l:"y",r:17},{l:"yy",d:"year"}],m=h.length,y=0;y<m;y+=1){var c=h[y];c.d&&(i=a?t(e).diff(d,c.d,!0):d.diff(e,c.d,!0));var p=(r.rounding||Math.round)(Math.abs(i));if(s=i>0,p<=c.r||!c.r){p<=1&&y>0&&(c=h[y-1]);var v=l[c.l];f&&(p=f(""+p)),u="string"==typeof v?v.replace("%d",p):v(p,n,c.l,s);break}}if(n)return u;var g=s?l.future:l.past;return"function"==typeof g?g(u):g.replace("%s",u)},n.to=function(r,e){return d(r,e,this,!0)},n.from=function(r,e){return d(r,e,this)};var a=function(r){return r.$u?t.utc():t()};n.toNow=function(r){return this.to(a(this),r)},n.fromNow=function(r){return this.from(a(this),r)}};export{e as default};
+//# sourceMappingURL=/sm/c2983b0d428171fc09ccabd5d0c76739b444c744225b0e956413b921c4cff2e2.map

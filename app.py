@@ -22,7 +22,7 @@ ApiKey = os.environ["API_KEY"]
 # or use a queue
 
 
-@cachetools.func.ttl_cache(maxsize=2, ttl=60)
+@cachetools.func.ttl_cache(maxsize=2, ttl=15)
 def get_arrivals(stations):
     print(str(arrow.utcnow()), "getting arrivals")
 
