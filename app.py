@@ -12,6 +12,8 @@ from datetime import datetime, date, time, timezone, tzinfo, timedelta
 import arrow
 from itertools import groupby, chain
 
+from tzlocal import get_localzone
+
 import cachetools.func
 
 ApiKey = os.environ["API_KEY"]
@@ -55,6 +57,7 @@ def get_arrivals(stations):
         )
         for train in trains
     ]
+
     return (arrivals, arrow.utcnow())
 
 
@@ -68,7 +71,7 @@ def countdown():
         {
             "route": route,
             "dest": dest,
-            "arrival_time": arrival_time,
+            "arrival_time": arrow.get(arrival_time, get_localzone()).isoformat(),
             "relative": (arrival_time - datetime.now()).seconds // 60,
             "direction": direction,
             "trip_id": trip_id,
