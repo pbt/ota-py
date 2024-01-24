@@ -80,7 +80,7 @@ def countdown():
     ]
     return render_template(
         "arrivals.html",
-        stop_ids=stop_ids,
+        stop_ids=request.args.get("stop_ids", "A41,R29"),
         station_name=station_name,
         mode=request.args.get("mode", "detailed"),
         last_updated=(last_updated, last_updated.humanize(arrow.utcnow())),
