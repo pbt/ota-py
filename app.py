@@ -5,33 +5,42 @@ app = Flask(__name__)
 import os
 
 from nyct_gtfs import NYCTFeed
+
 from nyct_gtfs.gtfs_static_types import Stations
 
 from datetime import datetime, date, time, timezone, tzinfo, timedelta
 import arrow
-from itertools import groupby
+from itertools import groupby, chain
 
 import cachetools.func
 
 ApiKey = os.environ["API_KEY"]
 
+# TODO: instantiate all the feeds, and manually refresh them.
+# or use a queue
+
 
 @cachetools.func.ttl_cache(maxsize=2, ttl=60)
-def get_arrivals():
+def get_arrivals(stations):
     print(str(arrow.utcnow()), "getting arrivals")
-    feedACE = NYCTFeed("A", api_key=ApiKey)
-    feedF = NYCTFeed("F", api_key=ApiKey)
-    feedR = NYCTFeed("R", api_key=ApiKey)
-    stations = Stations()
+
+    feeds = (
+        NYCTFeed("1", api_key=ApiKey),
+        NYCTFeed("A", api_key=ApiKey),
+        NYCTFeed("G", api_key=ApiKey),
+        NYCTFeed("F", api_key=ApiKey),
+        NYCTFeed("R", api_key=ApiKey),
+    )
 
     trains = []
 
-    # Stop IDs for Jay St-MetroTech
-    stops = ["A41N", "A41S", "R29N", "R29S"]
+    directional_stations = [(f"{station}N", f"{station}S") for station in stations]
+    stops = list(chain.from_iterable(directional_stations))
 
     for stop in stops:
-        for feed in [feedACE, feedF, feedR]:
+        for feed in feeds:
             trains += feed.filter_trips(headed_for_stop_id=stop, underway=True)
+
     arrivals = [
         (
             train.route_id,
@@ -51,7 +60,10 @@ def get_arrivals():
 
 @app.route("/")
 def countdown():
-    arrivals, last_updated = get_arrivals()
+    stop_ids = tuple(request.args.get("stop_ids", "A41,R29").split(","))
+    arrivals, last_updated = get_arrivals(stop_ids)
+    station_name = Stations().get_station_name(stop_ids[0])
+
     relative_arrivals = [
         {
             "route": route,
@@ -65,6 +77,8 @@ def countdown():
     ]
     return render_template(
         "arrivals.html",
+        stop_ids=stop_ids,
+        station_name=station_name,
         mode=request.args.get("mode", "detailed"),
         last_updated=(last_updated, last_updated.humanize(arrow.utcnow())),
         arrivals=sorted(
