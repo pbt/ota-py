@@ -172,6 +172,7 @@
 
     & .route-arrivals {
       margin-bottom: 0.5ch;
+      padding-top: 0.5ch;
       min-height: 6ch;
       border-top: 1px solid rgb(255 255 255 / 0.2);
     }
