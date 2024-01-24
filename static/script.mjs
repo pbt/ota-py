@@ -16,9 +16,12 @@ setInterval(function() {
   });
   document.querySelectorAll("time.replace").forEach(time => {
     const offsetSecs = dayjs(time.getAttribute("datetime")).diff(dayjs.utc(), 's')
-    if (offsetSecs < 60) {
+    if (offsetSecs < 10) {
+      time.innerText = 'just now';
+    } else if (offsetSecs < 60) {
       time.innerText = `${offsetSecs} ago`;
+    } else {
+      time.innerText = dayjs(time.getAttribute("datetime")).fromNow();
     }
-    time.innerText = dayjs(time.getAttribute("datetime")).fromNow();
   })
 }, 1000);
