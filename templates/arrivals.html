@@ -283,7 +283,7 @@
     <section class="arrivals-detailed">
       {% for direction, dir_arrivals in arrivals|groupby("direction") %}
       <div class="direction">
-        <h2>{% if direction == "N" %}Manhattan{% else %}Brooklyn &amp; Queens{% endif %}</h2>
+        <!--<h2>{% if direction == "N" %}Manhattan{% else %}Brooklyn &amp; Queens{% endif %}</h2>-->
         {% for route, r_arrivals in dir_arrivals|groupby("route") %}
         <div class="route-arrivals" id="arrivals-{{route}}">
           <h3>
