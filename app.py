@@ -29,9 +29,11 @@ def get_arrivals(stations):
     feeds = (
         NYCTFeed("1", api_key=ApiKey),
         NYCTFeed("A", api_key=ApiKey),
-        NYCTFeed("G", api_key=ApiKey),
         NYCTFeed("F", api_key=ApiKey),
-        NYCTFeed("R", api_key=ApiKey),
+        NYCTFeed("G", api_key=ApiKey),
+        NYCTFeed("J", api_key=ApiKey),
+        NYCTFeed("L", api_key=ApiKey),
+        NYCTFeed("N", api_key=ApiKey),
     )
 
     trains = []
