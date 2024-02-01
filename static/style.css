@@ -41,9 +41,14 @@
     font-family: 'Helvetica Neue', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
   }
 
+
+  :root {
+    --header-size: 2rem;
+  }
+
   header,
   main {
-    font-size: 2rem;
+    font-size: var(--header-size);
     flex: 1;
     width: 100%;
     background: rgb(255 255 255 / 0.03);
@@ -228,4 +233,17 @@
   .bullet {
     width: clamp(1.5ch, 6vmin, 6ch);
     height: clamp(1.5ch, 6vmin, 6ch);
+  }
+
+  [data-stn] a {
+    color: #fff;
+  }
+
+  #ota-search {
+    background: transparent;
+    width: 100%;
+    color: #fff;
+    border-width: 0 0 0.1ch 0;
+    font-family: 'Helvetica Neue', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+    font-size: var(--header-size);
   }

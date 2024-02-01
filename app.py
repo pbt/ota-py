@@ -3,6 +3,7 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 
 import os
+import json
 
 from nyct_gtfs import NYCTFeed
 
@@ -64,10 +65,12 @@ def get_arrivals(stations):
 
 
 @app.route("/")
-def countdown():
+def arrivals():
     stop_ids = tuple(request.args.get("stop_ids", "A41,R29").split(","))
     arrivals, last_updated = get_arrivals(stop_ids)
-    station_name = Stations().get_station_name(stop_ids[0])
+    station_name = "/".join(
+        set([Stations().get_station_name(stop_id) for stop_id in stop_ids])
+    )
 
     relative_arrivals = [
         {
@@ -90,4 +93,12 @@ def countdown():
             [arr for arr in relative_arrivals if arr["relative"] < 30],
             key=lambda arr: arr["arrival_time"],
         ),
+    )
+
+
+@app.route("/stations")
+def stations():
+    stations = json.load(open("./stations.json", encoding="utf-8"))
+    return render_template(
+        "stations.html", stations_json=json.dumps(stations), stations=stations.values()
     )

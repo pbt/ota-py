@@ -14,21 +14,20 @@
   <header>
     <div>
       <p>
-        <strong>The Octopus Transportation Authority</strong>. Last updated: <time class="replace"
-          datetime="{{last_updated[0]}}" hx-swap-oob="true" id="last-updated-time">{{last_updated[1]}}</time>
+        <strong>The Octopus Transportation Authority</strong>. Last updated: <time data-replace
+          datetime="{{last_updated[0]}}" hx-swap-oob="true" id="last-updated-time">{{last_updated[1]}}</time>.
       </p>
       <h1>{{station_name}}</h1>
     </div>
     <img alt="loading" class="htmx-indicator" src="{{url_for('static', filename='spinner.svg')}}">
   </header>
-  <main hx-get="{{url_for('countdown', mode=mode, stop_ids=stop_ids)}}" hx-trigger="every 15s" hx-swap="morph:outerHTML"
+  <main hx-get="{{url_for('arrivals', mode=mode, stop_ids=stop_ids)}}" hx-trigger="every 15s" hx-swap="morph:outerHTML"
     hx-select="main > *">
 
     {% if mode == "detailed" %}
     <section class="arrivals-detailed">
       {% for direction, dir_arrivals in arrivals|groupby("direction") %}
       <div class="direction">
-        <!--<h2>{% if direction == "N" %}Manhattan{% else %}Brooklyn &amp; Queens{% endif %}</h2>-->
         {% for route, r_arrivals in dir_arrivals|groupby("route") %}
         <div class="route-arrivals" id="arrivals-{{route}}">
           <h3>
@@ -38,7 +37,7 @@
           <div class="board">
             <h4>{{dest}}</h4>
             <div class="arrival-times">{% for arrival in d_arrivals|sort(attribute="relative")%}
-              <time class="arrival-time {%if arrival.relative < 7 %}arrival-time-due{%endif%}"
+              <time data-arrival-time class="arrival-time {%if arrival.relative < 7 %}arrival-time-due{%endif%}"
                 datetime="{{arrival.arrival_time}}">{% if arrival.relative < 1 %} due {% else %} <span
                   class="arrival-time-mins">{{arrival.relative}}</span> <small>min</small>{%
                   endif %}</time>
@@ -74,7 +73,8 @@
     {% endif %}
   </main>
   <footer>
-    made by <a href="https://pbt.neocities.org/">pbt</a>
+    made by <a href="https://pbt.neocities.org/">pbt</a> /
+    <a href="{{url_for('stations')}}">all stations</a>
   </footer>
   <script src="{{url_for('static', filename='htmx.min.js')}}"></script>
   <script type="module" src="{{url_for('static', filename='script.mjs')}}"></script>
