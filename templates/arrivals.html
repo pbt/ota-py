@@ -54,7 +54,7 @@
     <section class="arrivals-simple">
       <table class="arrivals">
         <tbody>
-          {% for arrival in arrivals %}
+          {% for arrival in arrivals() %}
           <tr class="arrival" id="arrival-{{arrival.trip_id}}">
             <td class="route route-{{arrival.route}}"><span class="sr-only">{{arrival.route}}</span></td>
             <td class="dest">{{arrival.dest}}</td>
@@ -74,8 +74,14 @@
   </main>
   <footer>
     made by <a href="https://pbt.neocities.org/">pbt</a> /
-    <a href="{{url_for('stations')}}">all stations</a>
+    <a data-all-stations-btn href="{{url_for('stations')}}">all stations</a>
   </footer>
+  <dialog class="all-stations" data-all-stations-dialog>
+    <form method="dialog">
+      <button><span aria-label="Close">✕</span></button>
+    </form>
+    <iframe data-all-stations-frame></iframe>
+  </dialog>
   <script src="{{url_for('static', filename='htmx.min.js')}}"></script>
   <script type="module" src="{{url_for('static', filename='script.mjs')}}"></script>
 </body>

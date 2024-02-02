@@ -2,27 +2,27 @@
 <html lang="en">
 
 <head>
-  <title>OTA: Next Train Arrivals</title>
+  <title>OTA All Stations</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-
+  <base target="_parent">
 </head>
 
 <link rel="manifest" href="{{url_for('static', filename='manifest.json')}}">
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 
-<body>
+<body class="{% if embed %}transparent{% endif %}">
   <header>
     <div>
-    <input id="ota-search" type="search" placeholder="Stations..."></input>
+      <input id="ota-search" type="search" placeholder="Stations..."></input>
     </div>
-    <img alt="loading" class="htmx-indicator" src="{{url_for('static', filename='spinner.svg')}}">
   </header>
-  <main>
+  <main class="stations-list">
     <div>
-    {% for stn in stations %}
-      <div data-stn id="{{ stn.id }}"><a href="{{ url_for("arrivals", stop_ids=",".join(stn.stops.keys())) }}">{{stn.name}}</a></div>
-    {% endfor %}
-  </div>
+      {% for stn in stations %}
+      <div data-stn id="{{ stn.id }}"><a
+          href="{{url_for('arrivals', stop_ids=','.join(stn.stops.keys()))}}">{{stn.name}}</a></div>
+      {% endfor %}
+    </div>
   </main>
   <script src="{{url_for('static', filename='htmx.min.js')}}"></script>
   <script type="application/json" id="ota-stations-data">
@@ -33,9 +33,10 @@
   <script>
     const stations = JSON.parse(document.getElementById("ota-stations-data").textContent);
 
-function onChange(evt) {
+    function onChange(evt) {
       const ids = Object.values(stations).filter(({name}) => {
-       return name.toLowerCase().includes(evt.target.value.toLowerCase())}).map(({id}) => id);
+        return name.toLowerCase().includes(evt.target.value.toLowerCase())
+      }).map(({id}) => id);
       document.querySelectorAll("[data-stn]").forEach((elem) => {
         if (ids.includes(elem.id)) {
           elem.style.display = "block";
@@ -44,9 +45,9 @@ function onChange(evt) {
         }
       })
     }
-    
-            document.querySelector("#ota-search").addEventListener("change", onChange);
-    document.querySelector("#ota-search").addEventListener("keyup", onChange );
+
+    document.querySelector("#ota-search").addEventListener("change", onChange);
+    document.querySelector("#ota-search").addEventListener("keyup", onChange);
   </script>
 </body>
 

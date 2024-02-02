@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import asyncio
 
 app = Flask(__name__)
 
@@ -22,23 +23,24 @@ ApiKey = os.environ["API_KEY"]
 # TODO: instantiate all the feeds, and manually refresh them.
 # or use a queue
 
+feeds = (
+    NYCTFeed("1", api_key=ApiKey),
+    NYCTFeed("A", api_key=ApiKey),
+    NYCTFeed("F", api_key=ApiKey),
+    NYCTFeed("G", api_key=ApiKey),
+    NYCTFeed("J", api_key=ApiKey),
+    NYCTFeed("L", api_key=ApiKey),
+    NYCTFeed("N", api_key=ApiKey),
+)
+
 
 @cachetools.func.ttl_cache(maxsize=2, ttl=15)
 def get_arrivals(stations):
     print(str(arrow.utcnow()), "getting arrivals")
-
-    feeds = (
-        NYCTFeed("1", api_key=ApiKey),
-        NYCTFeed("A", api_key=ApiKey),
-        NYCTFeed("F", api_key=ApiKey),
-        NYCTFeed("G", api_key=ApiKey),
-        NYCTFeed("J", api_key=ApiKey),
-        NYCTFeed("L", api_key=ApiKey),
-        NYCTFeed("N", api_key=ApiKey),
-    )
-
     trains = []
 
+    for feed in feeds:
+        feed.refresh()
     directional_stations = [(f"{station}N", f"{station}S") for station in stations]
     stops = list(chain.from_iterable(directional_stations))
 
@@ -100,5 +102,8 @@ def arrivals():
 def stations():
     stations = json.load(open("./stations.json", encoding="utf-8"))
     return render_template(
-        "stations.html", stations_json=json.dumps(stations), stations=stations.values()
+        "stations.html",
+        stations_json=json.dumps(stations),
+        stations=stations.values(),
+        embed=request.args.get("embed"),
     )
