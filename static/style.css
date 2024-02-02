@@ -297,6 +297,7 @@ dialog {
   &::backdrop {
     background: rgb(0 0 0 /0.9);
     backdrop-filter: blur(0.9ch);
+    -webkit-backdrop-filter: blur(0.9ch);
     animation: fadeIn 0.2s;
   }
 }
