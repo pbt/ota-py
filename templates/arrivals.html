@@ -14,9 +14,9 @@
   <header>
     <div>
       <p>
+        <a aria-label="Show all stations" data-all-stations-btn href="{{url_for('stations')}}">•</a>
         <strong>The Octopus Transportation Authority</strong>. Last updated: <time data-replace
           datetime="{{last_updated[0]}}" hx-swap-oob="true" id="last-updated-time">{{last_updated[1]}}</time>.
-        <a data-all-stations-btn href="{{url_for('stations')}}">•</a>
       </p>
       <h1>{{station_name}}</h1>
     </div>
