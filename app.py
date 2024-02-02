@@ -35,12 +35,18 @@ feeds = (
 
 
 @cachetools.func.ttl_cache(maxsize=2, ttl=15)
+def refresh():
+    print(str(arrow.utcnow()), "refresh")
+    for feed in feeds:
+        feed.refresh()
+
+
+@cachetools.func.ttl_cache(maxsize=2, ttl=15)
 def get_arrivals(stations):
     print(str(arrow.utcnow()), "getting arrivals")
     trains = []
+    refresh()
 
-    for feed in feeds:
-        feed.refresh()
     directional_stations = [(f"{station}N", f"{station}S") for station in stations]
     stops = list(chain.from_iterable(directional_stations))
 
