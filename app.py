@@ -31,6 +31,7 @@ feeds = (
     NYCTFeed("J", api_key=ApiKey),
     NYCTFeed("L", api_key=ApiKey),
     NYCTFeed("N", api_key=ApiKey),
+    NYCTFeed("SI", api_key=ApiKey),
 )
 
 
