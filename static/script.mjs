@@ -30,14 +30,15 @@ setInterval(function() {
 
 
 document.querySelector("a[data-all-stations-btn]").addEventListener("click", function(evt) {
-  console.log("hi");
-  // open this up in an iframe in a dialog
   evt.preventDefault();
-
 
   const href = new URL(evt.target.href);
   href.searchParams.append("embed", "true")
+
   // TODO write a URL manipulation library that is actually good
-  document.querySelector("iframe[data-all-stations-frame]").src = href;
-  document.querySelector("dialog[data-all-stations-dialog]").showModal();
+  const iframe = document.querySelector("iframe[data-all-stations-frame]");
+  iframe.src = href;
+  iframe.addEventListener("load", function() {
+    document.querySelector("dialog[data-all-stations-dialog]").showModal();
+  }, { once: true });
 })
