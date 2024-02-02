@@ -17,10 +17,14 @@
     </div>
   </header>
   <main class="stations-list">
+    <div data-recents>
+
+    </div>
     <div>
       {% for stn in stations %}
-      <div data-stn id="{{ stn.id }}"><a
-          href="{{url_for('arrivals', stop_ids=','.join(stn.stops.keys()))}}">{{stn.name}}</a></div>
+      <div data-stn id="{{ stn.id }}" data-stn-id="{{ stn.id }}"><a
+          href="{{url_for('arrivals', stop_ids=','.join(stn.stops.keys()))}}"
+          data-stn-id="{{ stn.id }}">{{stn.name}}</a></div>
       {% endfor %}
     </div>
   </main>
@@ -31,7 +35,25 @@
     {% endautoescape %}
   </script>
   <script>
+
+    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+
+    if (vw > 601) {
+      document.querySelector("input[type=search]").focus()
+    }
+
+
     const stations = JSON.parse(document.getElementById("ota-stations-data").textContent);
+
+    const recents = localStorage.getItem("recents") ?? []
+
+    // document.querySelectorAll("[data-stn]").forEach((elem) => {
+    //   if (recents.includes(elem.id)) {
+    //     elem.parentNode.removeChild(elem);
+    //     document.querySelector("[data-recents]").appendChild(elem);
+    //   }
+    // })
+
 
     function onChange(evt) {
       const ids = Object.values(stations).filter(({name}) => {

@@ -1,4 +1,4 @@
-ltime[data-replace] {
+time[data-replace] {
   animation: 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) 0s flash;
 }
 
@@ -364,5 +364,13 @@ dialog {
       background: rgb(0 0 0/0.2);
 
     }
+  }
+}
+
+[data-recents] {
+  border-bottom: 1px solid rgb(255 255 255 / 0.1);
+
+  &:empty {
+    display: none;
   }
 }
