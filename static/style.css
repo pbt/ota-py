@@ -64,6 +64,11 @@ header {
   display: flex;
   border-top: 1px solid rgb(255 255 255 / 0.05);
 
+  & a {
+    color: rgb(255 255 255 / 0.7);
+    text-decoration: none;
+  }
+
   & div {
     flex: 1;
   }
