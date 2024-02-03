@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import asyncio
 
 app = Flask(__name__)
@@ -114,3 +114,33 @@ def stations():
         stations=stations.values(),
         embed=request.args.get("embed"),
     )
+
+
+@app.route("/train/<trip_id>")
+def train(trip_id):
+    refresh()
+    for feed in feeds:
+        for trip in feed.trips:
+            if trip_id == trip.trip_id:
+                return render_template(
+                    "train.html",
+                    **{
+                        "route": trip.route_id,
+                        "dest": trip.headsign_text
+                        if trip.headsign_text
+                        else trip.shape_id,
+                        "summary": str(trip),
+                        "stops": [
+                            {
+                                "stop_name": update.stop_name,
+                                "arrival": arrow.get(
+                                    update.arrival, get_localzone()
+                                ).isoformat(),
+                                "relative": (update.arrival - datetime.now()).seconds
+                                // 60,
+                            }
+                            for update in trip.stop_time_updates
+                        ],
+                    },
+                )
+    return jsonify({"error": "uhh no train here"})

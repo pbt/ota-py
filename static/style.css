@@ -187,11 +187,10 @@ section.arrivals-simple {
     border-top: 1px solid rgb(255 255 255 / 0.2);
   }
 
-  /*
-  & .arrival-times .arrival-time:not(:last-child):after {
-    content: ',';
-    padding: 0;
-  }*/
+  & .arrival-times a {
+    text-decoration: none;
+    color: #fff;
+  }
 
   & .direction {
     flex: 1;
@@ -285,11 +284,16 @@ dialog {
     padding: 0.5ch;
 
     & button {
-      background: orangered;
+      background: color(srgb 0.9989 0.3545 0.3187);
       border: 1px solid rgba(255 255 255 / 0.1);
       color: #fff;
       padding: 0.5ch;
-      border-radius: 1ch;
+      border-radius: 50%;
+      width: 3ch;
+      height: 3ch;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-weight: bold;
     }
   }

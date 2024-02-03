@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>OTA All Stations</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <base target="_parent">
+</head>
+
+<link rel="manifest" href="{{url_for('static', filename='manifest.json')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+
+<body class="{% if embed %}transparent{% endif %}">
+  <header>
+    <h3>
+      <img class="bullet" src="{{url_for('static', filename=(route + '.svg'))}}" alt="{{route}}">
+    </h3>
+  </header>
+  <main>
+    <div class="board">
+      <h4>{{dest}}</h4>
+      <p>{{summary}}</p>
+      <div class="arrival-times">{% for stop in stops %}
+      <div>{{stop.stop_name}}
+        <time data-arrival-time class="arrival-time"
+          datetime="{{stop.arrival}}">{{stop.relative}} min</time></div>
+        {% endfor %}
+      </div>
+    </div>
+  </main>
+  <script src="{{url_for('static', filename='htmx.min.js')}}"></script>
+</body>
+</html>
