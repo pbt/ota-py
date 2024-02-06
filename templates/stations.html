@@ -20,7 +20,8 @@
     <div>
       {% for stn in stations %}
       <div data-stn id="{{ stn.id }}" data-stn-id="{{ stn.id }}"><a
-          href="{{url_for('station', stop_ids=','.join(stn.stops.keys()))}}" data-stn-id="{{ stn.id }}">{{stn.name}}</a>
+          href="{{url_for('arrivals', stop_ids=','.join(stn.stops.keys()))}}"
+          data-stn-id="{{ stn.id }}">{{stn.name}}</a>
       </div>
       {% endfor %}
     </div>
