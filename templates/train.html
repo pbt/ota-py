@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>OTA All Stations</title>
+  <title>OTA: {{summary}}</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <base target="_parent">
 </head>
@@ -10,22 +10,39 @@
 <link rel="manifest" href="{{url_for('static', filename='manifest.json')}}">
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 
-<body class="{% if embed %}transparent{% endif %}">
+<body hx-get="{{url_for('train', trip_id=trip_id)}}" hx-trigger="every 15s">
   <header>
     <h3>
-      <img class="bullet" src="{{url_for('static', filename=(route + '.svg'))}}" alt="{{route}}">
+      <img class="bullet" src="{{url_for('static', filename=(route + '.svg'))}}" alt="{{route}}"> {{dest}}
     </h3>
   </header>
   <main>
     <div class="board">
-      <h4>{{dest}}</h4>
+    <details>
+    <summary>train nerd stuff</summary>
       <p>{{summary}}</p>
-      <div class="arrival-times">{% for stop in stops %}
-      <div>{{stop.stop_name}}
-        <time data-arrival-time class="arrival-time"
-          datetime="{{stop.arrival}}">{{stop.relative}} min</time></div>
-        {% endfor %}
-      </div>
+      <hr>
+      <p>{{nyct_train_id}}</p>
+    </details>
+      <div class="arrival-times">
+    <section class="arrivals-simple">
+      <table class="arrivals">
+        <tbody>
+          {% for stop in stops %}
+          {% if stop.relative > 0 %}
+          <tr class="arrival">
+            <td class="dest"><a href="{{url_for('arrivals', stop_ids=stop.stop_id[:-1])}}">{{stop.stop_name}}</a></td>
+            <td class="time">
+              <time class="arrival-time {%if stop.relative < 5 %}arrival-time-due{%endif%}"
+                datetime="{{stop.arrival}}">{% if stop.relative < 1 %} due {% else %} {{stop.relative}}
+                  <small>min</small> {% endif %}</time>
+            </td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
     </div>
   </main>
   <script src="{{url_for('static', filename='htmx.min.js')}}"></script>

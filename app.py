@@ -105,6 +105,37 @@ def arrivals():
     )
 
 
+@app.route("/station/<stop_ids>")
+def station(stop_ids):
+    arrivals, last_updated = get_arrivals(stop_ids)
+    station_name = "/".join(
+        set([Stations().get_station_name(stop_id) for stop_id in stop_ids])
+    )
+
+    relative_arrivals = [
+        {
+            "route": route,
+            "dest": dest,
+            "arrival_time": arrow.get(arrival_time, get_localzone()).isoformat(),
+            "relative": (arrival_time - datetime.now()).seconds // 60,
+            "direction": direction,
+            "trip_id": trip_id,
+        }
+        for (route, dest, arrival_time, direction, trip_id) in arrivals
+    ]
+    return render_template(
+        "arrivals.html",
+        stop_ids=request.args.get("stop_ids", "A41,R29"),
+        station_name=station_name,
+        mode=request.args.get("mode", "detailed"),
+        last_updated=(last_updated, last_updated.humanize(arrow.utcnow())),
+        arrivals=sorted(
+            [arr for arr in relative_arrivals if arr["relative"] < 30],
+            key=lambda arr: arr["arrival_time"],
+        ),
+    )
+
+
 @app.route("/stations")
 def stations():
     stations = json.load(open("./stations.json", encoding="utf-8"))
@@ -125,19 +156,24 @@ def train(trip_id):
                 return render_template(
                     "train.html",
                     **{
+                        "trip_id": trip_id,
                         "route": trip.route_id,
                         "dest": trip.headsign_text
                         if trip.headsign_text
                         else trip.shape_id,
                         "summary": str(trip),
+                        "nyct_train_id": trip.nyc_train_id,
                         "stops": [
                             {
+                                "stop_id": update.stop_id,
                                 "stop_name": update.stop_name,
                                 "arrival": arrow.get(
                                     update.arrival, get_localzone()
                                 ).isoformat(),
                                 "relative": (update.arrival - datetime.now()).seconds
-                                // 60,
+                                // 60
+                                if update.arrival > datetime.now()
+                                else -1,
                             }
                             for update in trip.stop_time_updates
                         ],
