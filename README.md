@@ -14,4 +14,4 @@ throw it on a [TV](https://rctv.recurse.com/) or install it as a progressive web
 ## getting started
 1. get an API key from the [MTA](https://api.mta.info/#/landing)
 2. `poetry install`
-3. `API_KEY=${YOUR_API_KEY} poetry run gunicorn app:app`
+3. `API_KEY=${YOUR_API_KEY} poetry run hypercorn app:asgi_app`
