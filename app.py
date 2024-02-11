@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request, jsonify
+from asgiref.wsgi import WsgiToAsgi
+
 import asyncio
 
 app = Flask(__name__)
+asgi_app = WsgiToAsgi(app)
 
 import os
 import json
@@ -16,43 +19,34 @@ from itertools import groupby, chain
 
 from tzlocal import get_localzone
 
-import cachetools.func
-
 ApiKey = os.environ["API_KEY"]
 
-# TODO: instantiate all the feeds, and manually refresh them.
-# or use a queue
+Feeds = ("1", "A", "F", "G", "J", "L", "N", "SI")
+NYCTFeeds = [NYCTFeed(feed, api_key=ApiKey, fetch_immediately=True) for feed in Feeds]
 
-feeds = (
-    NYCTFeed("1", api_key=ApiKey),
-    NYCTFeed("A", api_key=ApiKey),
-    NYCTFeed("F", api_key=ApiKey),
-    NYCTFeed("G", api_key=ApiKey),
-    NYCTFeed("J", api_key=ApiKey),
-    NYCTFeed("L", api_key=ApiKey),
-    NYCTFeed("N", api_key=ApiKey),
-    NYCTFeed("SI", api_key=ApiKey),
-)
+last_updated_time = datetime.now()
 
 
-@cachetools.func.ttl_cache(maxsize=2, ttl=15)
-def refresh():
-    print(str(arrow.utcnow()), "refresh")
-    for feed in feeds:
-        feed.refresh()
+async def refresh():
+    global last_updated_time
+    if (datetime.now() - last_updated_time).seconds > 15:
+        last_updated_time = datetime.now()
+        timer = datetime.now()
+        print(arrow.get(timer), "refreshing")
+        await asyncio.gather(*(feed.refresh_async() for feed in NYCTFeeds))
+        print(str(arrow.utcnow()), "refresh finished in", str(datetime.now() - timer))
 
 
-@cachetools.func.ttl_cache(maxsize=2, ttl=15)
-def get_arrivals(stations):
+async def get_arrivals(stations):
     print(str(arrow.utcnow()), "getting arrivals")
     trains = []
-    refresh()
+    await refresh()
 
     directional_stations = [(f"{station}N", f"{station}S") for station in stations]
     stops = list(chain.from_iterable(directional_stations))
 
     for stop in stops:
-        for feed in feeds:
+        for feed in NYCTFeeds:
             trains += feed.filter_trips(headed_for_stop_id=stop, underway=True)
 
     arrivals = [
@@ -70,13 +64,13 @@ def get_arrivals(stations):
         for train in trains
     ]
 
-    return (arrivals, arrow.utcnow())
+    return arrivals
 
 
 @app.route("/")
-def arrivals():
+async def arrivals():
     stop_ids = tuple(request.args.get("stop_ids", "A41,R29").split(","))
-    arrivals, last_updated = get_arrivals(stop_ids)
+    arrivals = await get_arrivals(stop_ids)
     station_name = "/".join(
         set([Stations().get_station_name(stop_id) for stop_id in stop_ids])
     )
@@ -97,38 +91,10 @@ def arrivals():
         stop_ids=request.args.get("stop_ids", "A41,R29"),
         station_name=station_name,
         mode=request.args.get("mode", "detailed"),
-        last_updated=(last_updated, last_updated.humanize(arrow.utcnow())),
-        arrivals=sorted(
-            [arr for arr in relative_arrivals if arr["relative"] < 30],
-            key=lambda arr: arr["arrival_time"],
+        last_updated=(
+            arrow.get(last_updated_time, get_localzone()),
+            arrow.get(last_updated_time, get_localzone()).humanize(arrow.utcnow()),
         ),
-    )
-
-
-@app.route("/station/<stop_ids>")
-def station(stop_ids):
-    arrivals, last_updated = get_arrivals(stop_ids)
-    station_name = "/".join(
-        set([Stations().get_station_name(stop_id) for stop_id in stop_ids])
-    )
-
-    relative_arrivals = [
-        {
-            "route": route,
-            "dest": dest,
-            "arrival_time": arrow.get(arrival_time, get_localzone()).isoformat(),
-            "relative": (arrival_time - datetime.now()).seconds // 60,
-            "direction": direction,
-            "trip_id": trip_id,
-        }
-        for (route, dest, arrival_time, direction, trip_id) in arrivals
-    ]
-    return render_template(
-        "arrivals.html",
-        stop_ids=request.args.get("stop_ids", "A41,R29"),
-        station_name=station_name,
-        mode=request.args.get("mode", "detailed"),
-        last_updated=(last_updated, last_updated.humanize(arrow.utcnow())),
         arrivals=sorted(
             [arr for arr in relative_arrivals if arr["relative"] < 30],
             key=lambda arr: arr["arrival_time"],
@@ -148,9 +114,9 @@ def stations():
 
 
 @app.route("/train/<trip_id>")
-def train(trip_id):
-    refresh()
-    for feed in feeds:
+async def train(trip_id):
+    await refresh()
+    for feed in NYCTFeeds:
         for trip in feed.trips:
             if trip_id == trip.trip_id:
                 return render_template(
