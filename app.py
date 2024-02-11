@@ -29,7 +29,7 @@ last_updated_time = datetime.now()
 
 async def refresh():
     global last_updated_time
-    if (datetime.now() - last_updated_time).seconds > 15:
+    if (datetime.now() - last_updated_time).seconds >= 14:
         last_updated_time = datetime.now()
         timer = datetime.now()
         print(arrow.get(timer), "refreshing")
