@@ -17,6 +17,7 @@
     </div>
   </header>
   <main class="stations-list">
+    <h3>all stations</h3>
     <div>
       {% for stn in stations %}
       <div data-stn id="{{ stn.id }}" data-stn-id="{{ stn.id }}"><a
@@ -35,7 +36,7 @@
   <script>
 
     document.querySelector("input[type=search]").addEventListener("focus", (evt) => {
-      document.querySelector("#ota-search").scrollIntoView({behavior: "smooth"})
+      document.querySelector(".stations-list").scrollIntoView({behavior: "smooth", block: "end"})
     })
     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
     const stations = JSON.parse(document.getElementById("ota-stations-data").textContent);

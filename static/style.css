@@ -254,7 +254,7 @@ footer {
 }
 
 .search {
-  min-height: 100dvh;
+  height: 100vh;
 }
 
 #ota-search {
@@ -370,7 +370,10 @@ dialog {
 }
 
 .stations-list {
-  padding-top: calc(var(--header-size) + 1ch);
+  overflow-y: scroll;
+  height: 100vh;
+
+  padding: 0.25ch 0.5ch;
 }
 
 .transparent {
@@ -382,7 +385,6 @@ dialog {
     width: 100%;
     display: block;
     text-decoration: none;
-    padding: 0.25ch 0.5ch;
     border-radius: 0.25ch;
 
     &:hover,
