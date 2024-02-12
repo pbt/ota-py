@@ -11,73 +11,76 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 
 <body>
-  <header style="scroll-snap-align: start;">
-    <div>
-      <p>
-        <strong><a aria-label="Show all stations" href="#ota-search">
-            ota</a>•</strong>
-        last updated: <time data-replace datetime="{{last_updated[0]}}" hx-swap-oob="true"
-          id="last-updated-time">{{last_updated[1]}}</time>
-      </p>
-      <h1>{{station_name}}</h1>
-    </div>
-    <img alt="loading" class="htmx-indicator" src="{{url_for('static', filename='spinner.svg')}}">
-  </header>
-  <main hx-get="{{url_for('arrivals', mode=mode, stop_ids=stop_ids)}}" hx-trigger="every 15s" hx-swap="morph:outerHTML"
-    hx-select="main > *">
+  <div style="min-height: 100dvh;">
+    <header style="scroll-snap-align: start;">
+      <div>
+        <p>
+          <strong><a aria-label="Show all stations" href="#ota-search">
+              ota</a>•</strong>
+          last updated: <time data-replace datetime="{{last_updated[0]}}" hx-swap-oob="true"
+            id="last-updated-time">{{last_updated[1]}}</time>
+        </p>
+        <h1>{{station_name}}</h1>
+      </div>
+      <img alt="loading" class="htmx-indicator" src="{{url_for('static', filename='spinner.svg')}}">
+    </header>
+    <main hx-get="{{url_for('arrivals', mode=mode, stop_ids=stop_ids)}}" hx-trigger="every 15s"
+      hx-swap="morph:outerHTML" hx-select="main > *">
 
-    {% if mode == "detailed" %}
-    <section class="arrivals-detailed">
-      {% for direction, dir_arrivals in arrivals|groupby("direction") %}
-      <div class="direction">
-        {% for route, r_arrivals in dir_arrivals|groupby("route") %}
-        <div class="route-arrivals" id="arrivals-{{route}}">
-          <h3>
-            <img class="bullet" src="{{url_for('static', filename=(route + '.svg'))}}" alt="{{route}}">
-          </h3>
-          {% for dest, d_arrivals in r_arrivals|groupby("dest") %}
-          <div class="board">
-            <h4>{{dest}}</h4>
-            <div class="arrival-times">{% for arrival in d_arrivals|sort(attribute="relative")%}
-              <a href="{{url_for('train', trip_id=arrival.trip_id)}}"><time data-arrival-time
-                  data-trip-id="{{arrival.trip_id}}"
-                  class="arrival-time {%if arrival.relative < 7 %}arrival-time-due{%endif%}"
-                  datetime="{{arrival.arrival_time}}">{% if arrival.relative < 1 %} due {% else %} <span
-                    class="arrival-time-mins">{{arrival.relative}}</span> <small>min</small>{%
-                    endif %}</time></a>
-              {% endfor %}
+      {% if mode == "detailed" %}
+      <section class="arrivals-detailed">
+        {% for direction, dir_arrivals in arrivals|groupby("direction") %}
+        <div class="direction">
+          {% for route, r_arrivals in dir_arrivals|groupby("route") %}
+          <div class="route-arrivals" id="arrivals-{{route}}">
+            <h3>
+              <img class="bullet" src="{{url_for('static', filename=(route + '.svg'))}}" alt="{{route}}">
+            </h3>
+            {% for dest, d_arrivals in r_arrivals|groupby("dest") %}
+            <div class="board">
+              <h4>{{dest}}</h4>
+              <div class="arrival-times">{% for arrival in d_arrivals|sort(attribute="relative")%}
+                <a href="{{url_for('train', trip_id=arrival.trip_id)}}"><time data-arrival-time
+                    data-trip-id="{{arrival.trip_id}}"
+                    class="arrival-time {%if arrival.relative < 7 %}arrival-time-due{%endif%}"
+                    datetime="{{arrival.arrival_time}}">{% if arrival.relative < 1 %} due {% else %} <span
+                      class="arrival-time-mins">{{arrival.relative}}</span> <small>min</small>{%
+                      endif %}</time></a>
+                {% endfor %}
+              </div>
             </div>
+            {% endfor %}
           </div>
           {% endfor %}
         </div>
         {% endfor %}
-      </div>
-      {% endfor %}
-    </section>
-    {% else %}
-    <section class="arrivals-simple">
-      <table class="arrivals">
-        <tbody>
-          {% for arrival in arrivals %}
-          <tr class="arrival" id="arrival-{{arrival.trip_id}}">
-            <td class="route">
-              <img class="bullet" src="{{url_for('static', filename=(arrival.route+'.svg'))}}" alt="{{arrival.route}}">
-            </td>
-            <td class="dest">{{arrival.dest}}</td>
+      </section>
+      {% else %}
+      <section class="arrivals-simple">
+        <table class="arrivals">
+          <tbody>
+            {% for arrival in arrivals %}
+            <tr class="arrival" id="arrival-{{arrival.trip_id}}">
+              <td class="route">
+                <img class="bullet" src="{{url_for('static', filename=(arrival.route+'.svg'))}}"
+                  alt="{{arrival.route}}">
+              </td>
+              <td class="dest">{{arrival.dest}}</td>
 
-            <td class="time">
-              <time class="arrival-time {%if arrival.relative < 7 %}arrival-time-due{%endif%}"
-                datetime="{{arrival.arrival_time}}">{% if arrival.relative < 1 %} due {% else %} {{arrival.relative}}
-                  <small>min</small> {% endif %}</time>
-            </td>
+              <td class="time">
+                <time class="arrival-time {%if arrival.relative < 7 %}arrival-time-due{%endif%}"
+                  datetime="{{arrival.arrival_time}}">{% if arrival.relative < 1 %} due {% else %} {{arrival.relative}}
+                    <small>min</small> {% endif %}</time>
+              </td>
 
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </section>
-    {% endif %}
-  </main>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+      {% endif %}
+    </main>
+  </div>
   <aside class="search" hx-get="{{url_for('stations')}}" hx-trigger="load">
 
   </aside>
