@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>OTA: Next Train Arrivals</title>
+  <title>ota • {{station_name}}</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
 </head>
@@ -11,12 +11,13 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 
 <body>
-  <header>
+  <header style="scroll-snap-align: start;">
     <div>
       <p>
-        <a aria-label="Show all stations" data-all-stations-btn href="{{url_for('stations')}}">• ota</a>
+        <strong><a aria-label="Show all stations" href="#ota-search">
+            ota</a>•</strong>
         last updated: <time data-replace datetime="{{last_updated[0]}}" hx-swap-oob="true"
-          id="last-updated-time">{{last_updated[1]}}</time>.
+          id="last-updated-time">{{last_updated[1]}}</time>
       </p>
       <h1>{{station_name}}</h1>
     </div>
@@ -77,6 +78,9 @@
     </section>
     {% endif %}
   </main>
+  <aside class="search" hx-get="{{url_for('stations')}}" hx-trigger="load">
+
+  </aside>
   <footer>
     made by <a href="https://pbt.neocities.org/">pbt</a> /
   </footer>

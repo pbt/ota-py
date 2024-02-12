@@ -11,9 +11,9 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 
 <body class="{% if embed %}transparent{% endif %}">
-  <header>
+  <header id="ota-search">
     <div>
-      <input id="ota-search" type="search" placeholder="Stations..."></input>
+      <input type="search" placeholder="Stations..."></input>
     </div>
   </header>
   <main class="stations-list">
@@ -34,12 +34,10 @@
   </script>
   <script>
 
+    document.querySelector("input[type=search]").addEventListener("focus", (evt) => {
+      document.querySelector("#ota-search").scrollIntoView({behavior: "smooth"})
+    })
     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-
-    if (vw > 601) {
-      document.querySelector("input[type=search]").focus()
-    }
-
     const stations = JSON.parse(document.getElementById("ota-stations-data").textContent);
 
     function onChange(evt) {

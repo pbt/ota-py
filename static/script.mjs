@@ -18,7 +18,7 @@ setInterval(function() {
   });
   document.querySelectorAll("time[data-replace]").forEach(time => {
     const offsetSecs = dayjs(time.getAttribute("datetime")).diff(dayjs.utc(), 's')
-    if (offsetSecs > -5) {
+    if (offsetSecs > -15) {
       time.innerText = 'just now';
     } else if (offsetSecs > -60) {
       time.innerText = `${Math.abs(offsetSecs)} seconds ago`;
