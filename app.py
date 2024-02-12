@@ -1,11 +1,8 @@
 from flask import Flask, render_template, request, jsonify
+from flask_squeeze import Squeeze
 from asgiref.wsgi import WsgiToAsgi
 
 import asyncio
-
-app = Flask(__name__)
-asgi_app = WsgiToAsgi(app)
-
 import os
 import json
 
@@ -24,6 +21,13 @@ ApiKey = os.environ["API_KEY"]
 Feeds = ("1", "A", "F", "G", "J", "L", "N", "SI")
 NYCTFeeds = [NYCTFeed(feed, api_key=ApiKey, fetch_immediately=True) for feed in Feeds]
 
+# initialize flask app
+squeeze = Squeeze()
+app = Flask(__name__)
+squeeze.init_app(app)
+asgi_app = WsgiToAsgi(app)
+
+# globals
 last_updated_time = datetime.now()
 
 
