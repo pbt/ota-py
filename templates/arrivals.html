@@ -14,9 +14,9 @@
   <header>
     <div>
       <p>
-        <a aria-label="Show all stations" data-all-stations-btn href="{{url_for('stations')}}">•</a>
-        <strong>The Octopus Transportation Authority</strong>. Last updated: <time data-replace
-          datetime="{{last_updated[0]}}" hx-swap-oob="true" id="last-updated-time">{{last_updated[1]}}</time>.
+        <a aria-label="Show all stations" data-all-stations-btn href="{{url_for('stations')}}">• ota</a>
+        last updated: <time data-replace datetime="{{last_updated[0]}}" hx-swap-oob="true"
+          id="last-updated-time">{{last_updated[1]}}</time>.
       </p>
       <h1>{{station_name}}</h1>
     </div>
@@ -57,13 +57,15 @@
     <section class="arrivals-simple">
       <table class="arrivals">
         <tbody>
-          {% for arrival in arrivals() %}
+          {% for arrival in arrivals %}
           <tr class="arrival" id="arrival-{{arrival.trip_id}}">
-            <td class="route route-{{arrival.route}}"><span class="sr-only">{{arrival.route}}</span></td>
+            <td class="route">
+              <img class="bullet" src="{{url_for('static', filename=(arrival.route+'.svg'))}}" alt="{{arrival.route}}">
+            </td>
             <td class="dest">{{arrival.dest}}</td>
 
             <td class="time">
-              <time class="arrival-time {%if arrival.relative < 5 %}arrival-time-due{%endif%}"
+              <time class="arrival-time {%if arrival.relative < 7 %}arrival-time-due{%endif%}"
                 datetime="{{arrival.arrival_time}}">{% if arrival.relative < 1 %} due {% else %} {{arrival.relative}}
                   <small>min</small> {% endif %}</time>
             </td>

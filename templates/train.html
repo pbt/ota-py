@@ -18,33 +18,37 @@
   </header>
   <main>
     <div class="board">
+      <div class="arrival-times">
+        <section class="arrivals-simple">
+          <table class="arrivals">
+            <tbody>
+              {% for stop in stops %}
+              {% if stop.relative > 0 %}
+              <tr class="arrival">
+                <td class="dest"><a href="{{url_for('arrivals', stop_ids=stop.stop_id[:-1])}}">{{stop.stop_name}}</a>
+                </td>
+                <td class="time">
+                  <time class="arrival-time {%if stop.relative < 5 %}arrival-time-due{%endif%}"
+                    datetime="{{stop.arrival}}">{% if stop.relative < 1 %} due {% else %} {{stop.relative}} <small>
+                      min</small> {% endif %}</time>
+                </td>
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </section>
+      </div>
+  </main>
+  <footer>
     <details>
-    <summary>train nerd stuff</summary>
+      <summary>train nerd stuff</summary>
       <p>{{summary}}</p>
       <hr>
       <p>{{nyct_train_id}}</p>
     </details>
-      <div class="arrival-times">
-    <section class="arrivals-simple">
-      <table class="arrivals">
-        <tbody>
-          {% for stop in stops %}
-          {% if stop.relative > 0 %}
-          <tr class="arrival">
-            <td class="dest"><a href="{{url_for('arrivals', stop_ids=stop.stop_id[:-1])}}">{{stop.stop_name}}</a></td>
-            <td class="time">
-              <time class="arrival-time {%if stop.relative < 5 %}arrival-time-due{%endif%}"
-                datetime="{{stop.arrival}}">{% if stop.relative < 1 %} due {% else %} {{stop.relative}}
-                  <small>min</small> {% endif %}</time>
-            </td>
-          </tr>
-          {% endif %}
-          {% endfor %}
-        </tbody>
-      </table>
-    </section>
-    </div>
-  </main>
+  </footer>
   <script src="{{url_for('static', filename='htmx.min.js')}}"></script>
 </body>
+
 </html>

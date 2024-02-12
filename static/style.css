@@ -135,11 +135,17 @@ h1 {
 }
 
 section.arrivals-simple {
+
+  font-size: clamp(1rem, 4vw, 2rem);
+
+  & a {
+    color: #fff;
+  }
+
   display: flex;
 
   & table.arrivals {
     flex: 1;
-    line-height: 2.5rem;
 
 
     & .dest {
