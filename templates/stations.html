@@ -34,8 +34,12 @@
   <script>
 
     document.querySelector("input[type=search]").addEventListener("focus", (evt) => {
-      document.querySelector("input[type=search]").scrollIntoView({behavior: "smooth", block: "end"})
+      document.querySelector("#ota-search").className = "top";
     })
+    document.querySelector("input[type=search]").addEventListener("blur", (evt) => {
+      document.querySelector("#ota-search").className = "";
+    })
+
     const stations = JSON.parse(document.getElementById("ota-stations-data").textContent);
 
     function onChange(evt) {

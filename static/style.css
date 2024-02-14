@@ -267,6 +267,12 @@ footer {
   gap: 1ch;
 }
 
+#ota-search.top {
+  top: 0;
+  bottom: auto;
+  z-index: 999;
+}
+
 #ota-search input, #search-launcher .search-btn {
 flex: 1;
   display: block;
