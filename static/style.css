@@ -269,6 +269,7 @@ footer {
 
 #ota-search:has(input:focus) {
   bottom: auto;
+  transition: 0.2s all;
 }
 
 #ota-search input, #search-launcher .search-btn {
