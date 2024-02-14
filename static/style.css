@@ -391,7 +391,7 @@ dialog {
 
 .stations-list {
   min-height: 100vh;
-  padding: 0.25ch 0.5ch 5rem 0.25ch;
+  padding: 1ch 1ch 5rem 1ch;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -406,8 +406,8 @@ dialog {
     top: 0;
     left: 0;
     right: 0;
-    padding: .5ch;
-  backdrop-filter: blur(20px) opacity(0.9);
+    padding: 1.5ch;
+    background: linear-gradient(rgb(0 0 0), rgb(0 0 0 ), rgb(0 0 0/ 0));
   }
 }
 

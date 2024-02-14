@@ -84,7 +84,7 @@
     </footer>
   </div>
   <aside class="search" id="search-launcher">
-    <a href="{{url_for('stations')}}" hx-get="{{url_for('stations')}}" hx-target="body" class="search-btn">Stations...</a>
+    <a hx-push-url="true" href="{{url_for('stations')}}" hx-get="{{url_for('stations')}}" hx-target="body" class="search-btn">Stations...</a>
   </aside>
   <dialog class="all-stations" data-all-stations-dialog>
     <form method="dialog">
