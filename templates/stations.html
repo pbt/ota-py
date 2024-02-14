@@ -36,7 +36,6 @@
     document.querySelector("input[type=search]").addEventListener("focus", (evt) => {
       document.querySelector(".stations-list").scrollIntoView({behavior: "smooth", block: "end"})
     })
-    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
     const stations = JSON.parse(document.getElementById("ota-stations-data").textContent);
 
     function onChange(evt) {
@@ -53,8 +52,12 @@
     }
 
 
-    document.querySelector(".stations-list").addEventListener("scroll", () => {
+    document.addEventListener("scroll", () => {
+    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+    if (vw < 601) {
+      
       document.querySelector("input[type=search]").blur();
+    }
     })
     document.querySelector("#ota-search").addEventListener("change", onChange);
     document.querySelector("#ota-search").addEventListener("keyup", onChange);
