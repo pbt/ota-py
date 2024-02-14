@@ -267,8 +267,7 @@ footer {
   gap: 1ch;
 }
 
-#ota-search {
-  top: calc(100dvh - 3.5rem);
+#ota-search:has(input:focus) {
   bottom: auto;
 }
 

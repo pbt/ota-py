@@ -12,7 +12,7 @@
 
 <body class="{% if embed %}transparent{% endif %}">
   <header id="ota-search">
-     <a class="back" href="{{url_for('arrivals')}}">back</a><input autofocus type="search" placeholder="Stations..."></input>
+     <a class="back" href="{{url_for('arrivals')}}">back</a><input type="search" placeholder="Stations..."></input>
   </header>
   <main class="stations-list">
     <h6>All Stations</h6>
@@ -33,12 +33,14 @@
   </script>
   <script>
 
-    // document.querySelector("input[type=search]").addEventListener("focus", (evt) => {
-    //   document.querySelector("#ota-search").className = "top";
-    // })
-    // document.querySelector("input[type=search]").addEventListener("blur", (evt) => {
-    //   document.querySelector("#ota-search").className = "";
-    // })
+    document.querySelector("input[type=search]").addEventListener("focus", (evt) => {
+    const top = `calc(${window.visualViewport.height}px - ${document.querySelector("#ota-search").clientHeight}px - 0.1ch)`;
+    console.log(top);
+ document.querySelector("#ota-search").style.top = top;
+    })
+    document.querySelector("input[type=search]").addEventListener("blur", (evt) => {
+      document.querySelector("#ota-search").style.top = "auto";
+    })
 
     const stations = JSON.parse(document.getElementById("ota-stations-data").textContent);
 
