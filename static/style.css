@@ -253,11 +253,7 @@ footer {
   color: #fff;
 }
 
-.search {
-  height: 100vh;
-}
-
-#ota-search {
+#ota-search, #search-launcher {
   background: linear-gradient(rgb(33 33 33), rgb(33 33 33 / 0.5));
   backdrop-filter: blur(20px) opacity(0.9);
   -webkit-backdrop-filter: blur(20px) opacity(0.9);
@@ -265,21 +261,46 @@ footer {
   left: 0;
   bottom: 0;
   right: 0;
-  padding: 0.5ch 1ch;
-
-  & input {
-    width: 100%;
-    color: #fff;
-    background: linear-gradient(rgb(33 33 33), rgb(33 33 33 / 0.5));
-    border-radius: .25ch;
-    border-width: .1ch;
-    border-color: rgb(255 255 255 / 0.3);
-    padding: 0.5ch;
-    font-family: 'Helvetica Neue', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
-    font-size: calc(var(--header-size) * 0.75);
-  }
+  font-size: 1rem;
+  padding: 1ch;
+  display: flex;
+  gap: 1ch;
 }
 
+#ota-search input, #search-launcher .search-btn {
+flex: 1;
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(rgb(33 33 33), rgb(33 33 33 / 0.5));
+  border-radius: .25ch;
+  border: .1ch solid rgb(255 255 255 / 0.3);
+  box-shadow: 0 0 .1ch rgb(0 0 0 / 0.1);
+  margin: 0;
+  padding: 0.5ch;
+  font-family: 'Helvetica Neue', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+  font-size: calc(var(--header-size) * 0.75);
+}
+
+.search-btn {
+  color: #ccc;   
+}
+
+.back {
+  animation: 0.25s cubic-bezier(0.55, 0.085, 0.68, 0.53) 0s slideInLeft;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    width: 0;
+  }
+
+  to {
+    opacity: 1;
+    width: 2rem;
+  }
+}
 dialog {
   padding: 0;
   background: rgb(33 33 33);
@@ -345,10 +366,9 @@ dialog {
   }
 }
 
-@keyframes moveIn {
+@keyframes slideUp {
   from {
-    transform: translateY(5vh) perspective(600px) rotateX(2deg);
-    opacity: 0;
+    transform: translateY(5vh);    opacity: 0;
   }
 
   to {
@@ -370,10 +390,25 @@ dialog {
 }
 
 .stations-list {
-  overflow-y: scroll;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 0.25ch 0.5ch 5rem 0.25ch;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 
-  padding: 0.25ch 0.5ch;
+  & > div {
+  padding-top: 2rem;
+    animation: 0.25s cubic-bezier(0.55, 0.085, 0.68, 0.53) 0s slideUp;
+  }
+
+  & h6 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: .5ch;
+  backdrop-filter: blur(20px) opacity(0.9);
+  }
 }
 
 .transparent {
@@ -402,3 +437,5 @@ dialog {
     display: none;
   }
 }
+
+

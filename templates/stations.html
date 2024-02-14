@@ -12,12 +12,10 @@
 
 <body class="{% if embed %}transparent{% endif %}">
   <header id="ota-search">
-    <div>
-      <input type="search" placeholder="Stations..."></input>
-    </div>
+     <a class="back" href="{{url_for('arrivals')}}">back</a><input autofocus type="search" placeholder="Stations..."></input>
   </header>
   <main class="stations-list">
-    <h3>all stations</h3>
+    <h6>All Stations</h6>
     <div>
       {% for stn in stations %}
       <div data-stn id="{{ stn.id }}" data-stn-id="{{ stn.id }}"><a

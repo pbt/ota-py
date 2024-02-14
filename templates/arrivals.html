@@ -10,8 +10,8 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 
 <body>
-  <div style="min-height: 100dvh;">
-    <header style="scroll-snap-align: start;">
+  <div>
+    <header>
       <div>
         <p>
           <strong><a aria-label="Show all stations" href="#ota-search">
@@ -79,13 +79,13 @@
       </section>
       {% endif %}
     </main>
+    <footer>
+      made by <a href="https://pbt.neocities.org/">pbt</a> /
+    </footer>
   </div>
-  <aside class="search" hx-get="{{url_for('stations')}}" hx-trigger="load">
-
+  <aside class="search" id="search-launcher">
+    <a href="{{url_for('stations')}}" hx-get="{{url_for('stations')}}" hx-target="body" class="search-btn">Stations...</a>
   </aside>
-  <footer>
-    made by <a href="https://pbt.neocities.org/">pbt</a> /
-  </footer>
   <dialog class="all-stations" data-all-stations-dialog>
     <form method="dialog">
       <button><span aria-label="Close">✕</span></button>
