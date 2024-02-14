@@ -396,7 +396,6 @@ dialog {
 }
 
 .stations-list {
-  min-height: 100vh;
   padding: 1ch 1ch 5rem 1ch;
   display: flex;
   flex-direction: column;
