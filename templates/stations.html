@@ -39,6 +39,7 @@
     const stations = JSON.parse(document.getElementById("ota-stations-data").textContent);
 
     function onChange(evt) {
+    evt.target.scrollToView();
       const ids = Object.values(stations).filter(({name}) => {
         return name.toLowerCase().includes(evt.target.value.toLowerCase())
       }).map(({id}) => id);
