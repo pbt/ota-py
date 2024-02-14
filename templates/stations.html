@@ -52,6 +52,10 @@
       })
     }
 
+
+    document.querySelector(".stations-list").addEventListener("scroll", () => {
+      document.querySelector("input[type=search]").blur();
+    })
     document.querySelector("#ota-search").addEventListener("change", onChange);
     document.querySelector("#ota-search").addEventListener("keyup", onChange);
   </script>
