@@ -373,7 +373,8 @@ dialog {
 
 @keyframes slideUp {
   from {
-    transform: translateY(5vh);    opacity: 0;
+    transform: translateY(5vh);  
+      opacity: 0;
   }
 
   to {
@@ -411,7 +412,7 @@ dialog {
     left: 0;
     right: 0;
     padding: 1.5ch;
-    background: linear-gradient(rgb(0 0 0), rgb(0 0 0 ), rgb(0 0 0/ 0));
+    background: linear-gradient(rgb(33 33 33), rgb(33 33 33 ), rgb(33 33 33/ 0));
   }
 }
 
