@@ -37,37 +37,38 @@
     {% endautoescape %}
   </script>
   <script>
-
     window.setTimeout(() => {
-      requestAnimationFrame(() => document.querySelector("#ota-search").className = "js");
-      requestAnimationFrame(() => {resizeHandler()});
+      requestAnimationFrame(() => document.querySelector("input[type=search]").focus());
     }, 200);
 
     const blurOnScroll = (evt) => {
       document.querySelector("input[type=search]").blur();
-      requestAnimationFrame(() => {resizeHandler()});
     }
-
-    document.querySelector(".stations-list").addEventListener("pointerdown", blurOnScroll);
 
     const resizeHandler = () => {
       const top = `calc(${window.visualViewport.height}px - ${document.querySelector("#ota-search").clientHeight}px - 0.1ch)`;
-      document.querySelector("#ota-search").style.bottom = "auto";
       document.querySelector("#ota-search").style.top = top;
     }
 
     document.querySelector("input[type=search]").addEventListener("focus", (evt) => {
-      resizeHandler();
+      const top = `calc(${window.visualViewport.height}px - ${document.querySelector("#ota-search").clientHeight}px - 0.1ch)`;
+      document.querySelector("#ota-search").style.top = top;
       window.setTimeout(() => {
         resizeHandler();
+        document.addEventListener("scroll", blurOnScroll);
       }, 100);
+      window.visualViewport.addEventListener("resize", resizeHandler);
     });
 
+    document.querySelector("input[type=search]").addEventListener("blur", (evt) => {
+      document.querySelector("#ota-search").style.top = "auto";
+      window.visualViewport.removeEventListener("resize", resizeHandler);
+      document.removeEventListener("scroll", blurOnScroll);
+    })
 
     const stations = JSON.parse(document.getElementById("ota-stations-data").textContent);
 
     function onChange(evt) {
-      resizeHandler()
       document.querySelector("input[type=search]").scrollIntoView(false);
       const ids = Object.values(stations).filter(({name}) => {
         return name.toLowerCase().includes(evt.target.value.toLowerCase())
