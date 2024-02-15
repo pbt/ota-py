@@ -37,10 +37,6 @@
     {% endautoescape %}
   </script>
   <script>
-    window.setTimeout(() => {
-      requestAnimationFrame(() => document.querySelector("input[type=search]").click());
-    }, 500);
-
     const blurOnScroll = (evt) => {
       document.querySelector("input[type=search]").blur();
     }
@@ -54,9 +50,9 @@
       const top = `calc(${window.visualViewport.height}px - ${document.querySelector("#ota-search").clientHeight}px - 0.1ch)`;
       document.querySelector("#ota-search").style.top = top;
       window.setTimeout(() => {
-        resizeHandler();
+        requestAnimationFrame(() => {resizeHandler()});
         document.querySelectorAll("a[data-stn-id]").forEach((el) => el.addEventListener("pointerdown", blurOnScroll));
-      }, 100);
+      }, 200);
       window.visualViewport.addEventListener("resize", resizeHandler);
     });
 
