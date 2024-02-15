@@ -39,7 +39,7 @@
   <script>
     window.setTimeout(() => {
       requestAnimationFrame(() => document.querySelector("input[type=search]").focus());
-    }, 200);
+    }, 500);
 
     const blurOnScroll = (evt) => {
       document.querySelector("input[type=search]").blur();
@@ -55,7 +55,7 @@
       document.querySelector("#ota-search").style.top = top;
       window.setTimeout(() => {
         resizeHandler();
-        document.addEventListener("scroll", blurOnScroll);
+        document.querySelectorAll("a[data-stn-id]").forEach((el) => el.addEventListener("pointerdown", blurOnScroll));
       }, 100);
       window.visualViewport.addEventListener("resize", resizeHandler);
     });
@@ -63,7 +63,7 @@
     document.querySelector("input[type=search]").addEventListener("blur", (evt) => {
       document.querySelector("#ota-search").style.top = "auto";
       window.visualViewport.removeEventListener("resize", resizeHandler);
-      document.removeEventListener("scroll", blurOnScroll);
+      document.querySelectorAll("a[data-stn-id]").forEach((el) => el.addEventListener("pointerdown", blurOnScroll));
     })
 
     const stations = JSON.parse(document.getElementById("ota-stations-data").textContent);
