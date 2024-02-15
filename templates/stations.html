@@ -48,7 +48,7 @@
       requestAnimationFrame(() => {resizeHandler()});
     }
 
-    document.querySelector("a[data-stn-id]").addEventListener("pointerdown", blurOnScroll);
+    document.querySelector("stations-list").addEventListener("pointerdown", blurOnScroll);
 
     const resizeHandler = () => {
       const top = `calc(${window.visualViewport.height}px - ${document.querySelector("#ota-search").clientHeight}px - 0.1ch)`;
