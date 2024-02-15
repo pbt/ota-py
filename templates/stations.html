@@ -38,8 +38,8 @@
   </script>
   <script>
     window.setTimeout(() => {
-      document.querySelector("input[type=search]").focus();
-    }, 100);
+      requestAnimationFrame(() => document.querySelector("input[type=search]").focus());
+    }, 200);
 
     const blurOnScroll = (evt) => {
       document.querySelector("input[type=search]").blur();
@@ -81,14 +81,6 @@
         }
       })
     }
-
-    // document.addEventListener("scroll", () => {
-    // const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-    // if (vw < 601) {
-
-    //   document.querySelector("input[type=search]").blur();
-    // }
-    // })
     document.querySelector("#ota-search").addEventListener("change", onChange);
     document.querySelector("#ota-search").addEventListener("keyup", onChange);
   </script>
