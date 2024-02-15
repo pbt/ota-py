@@ -51,7 +51,7 @@
       window.setTimeout(() => {
         requestAnimationFrame(() => {resizeHandler()});
         document.querySelectorAll("a[data-stn-id]").forEach((el) => el.addEventListener("pointerdown", blurOnScroll));
-        document.querySelector("body").addEventListener("pointerdown", blurOnScroll);
+        document.querySelector("main").addEventListener("pointerdown", blurOnScroll);
       }, 200);
       window.visualViewport.addEventListener("resize", resizeHandler);
     });
@@ -59,7 +59,7 @@
     document.querySelector("input[type=search]").addEventListener("blur", (evt) => {
       document.querySelector("#ota-search").style.top = "auto";
       window.visualViewport.removeEventListener("resize", resizeHandler);
-      document.querySelector("body").removeEventListener("pointerdown", blurOnScroll);
+      document.querySelector("main").removeEventListener("pointerdown", blurOnScroll);
       document.querySelectorAll("a[data-stn-id]").forEach((el) => el.removeEventListener("pointerdown", blurOnScroll));
     })
 

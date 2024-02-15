@@ -10,7 +10,7 @@
 <link rel="manifest" href="{{url_for('static', filename='manifest.json')}}">
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 
-<body hx-get="{{url_for('train', trip_id=trip_id)}}" hx-trigger="every 15s">
+<body class="dropIn" hx-get="{{url_for('train', trip_id=trip_id)}}" hx-trigger="every 15s">
   <header>
     <h3>
       <img class="bullet" src="{{url_for('static', filename=(route + '.svg'))}}" alt="{{route}}"> {{dest}}
