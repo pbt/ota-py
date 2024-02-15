@@ -11,11 +11,14 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 
 <body class="{% if embed %}transparent{% endif %}">
-  <header id="ota-search">
-     <a class="back" href="{{url_for('arrivals')}}">back</a><input type="search" placeholder="Stations..."></input>
-  </header>
+  <header class="stations-header">
+    All Stations </header>
+  <div id="ota-search">
+    <a class="btn back"
+      href="{{url_for('arrivals', stop_ids=request.args.get('prev') if request.args.get('prev') else None)}}">←</a><input
+      type="search" placeholder="Stations..."></input>
+  </div>
   <main class="stations-list">
-    <h6>All Stations</h6>
     <div>
       {% for stn in stations %}
       <div data-stn id="{{ stn.id }}" data-stn-id="{{ stn.id }}"><a
@@ -25,34 +28,37 @@
       {% endfor %}
     </div>
   </main>
+  <div class="blur-top"></div>
+  <div class="blur-bottom"></div>
   <script src="{{url_for('static', filename='htmx.min.js')}}"></script>
   <script type="application/json" id="ota-stations-data">
-  {% autoescape false %}
+    {% autoescape false %}
     {{ stations_json }}
     {% endautoescape %}
   </script>
   <script>
+    window.setTimeout(() => {
+      document.querySelector("input[type=search]").focus();
+    }, 100);
 
-const blurOnScroll = (evt) => {
+    const blurOnScroll = (evt) => {
       document.querySelector("input[type=search]").blur();
-    }    
-    
+    }
 
     const resizeHandler = () => {
       const top = `calc(${window.visualViewport.height}px - ${document.querySelector("#ota-search").clientHeight}px - 0.1ch)`;
-       document.querySelector("#ota-search").style.top = top;
+      document.querySelector("#ota-search").style.top = top;
     }
 
     document.querySelector("input[type=search]").addEventListener("focus", (evt) => {
       const top = `calc(${window.visualViewport.height}px - ${document.querySelector("#ota-search").clientHeight}px - 0.1ch)`;
-       document.querySelector("#ota-search").style.top = top;
+      document.querySelector("#ota-search").style.top = top;
       window.setTimeout(() => {
         resizeHandler();
-    document.addEventListener("scroll", blurOnScroll);
+        document.addEventListener("scroll", blurOnScroll);
       }, 100);
-    window.visualViewport.addEventListener("resize", resizeHandler);
+      window.visualViewport.addEventListener("resize", resizeHandler);
     });
-
 
     document.querySelector("input[type=search]").addEventListener("blur", (evt) => {
       document.querySelector("#ota-search").style.top = "auto";
@@ -63,7 +69,7 @@ const blurOnScroll = (evt) => {
     const stations = JSON.parse(document.getElementById("ota-stations-data").textContent);
 
     function onChange(evt) {
-     document.querySelector("input[type=search]").scrollIntoView(false);
+      document.querySelector("input[type=search]").scrollIntoView(false);
       const ids = Object.values(stations).filter(({name}) => {
         return name.toLowerCase().includes(evt.target.value.toLowerCase())
       }).map(({id}) => id);
@@ -76,11 +82,10 @@ const blurOnScroll = (evt) => {
       })
     }
 
-
     // document.addEventListener("scroll", () => {
     // const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
     // if (vw < 601) {
-      
+
     //   document.querySelector("input[type=search]").blur();
     // }
     // })

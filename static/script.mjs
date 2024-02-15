@@ -27,18 +27,3 @@ setInterval(function() {
     }
   })
 }, 1000);
-
-
-document.querySelector("a[data-all-stations-btn]").addEventListener("click", function(evt) {
-  evt.preventDefault();
-
-  const href = new URL(evt.target.href);
-  href.searchParams.append("embed", "true")
-
-  // TODO write a URL manipulation library that is actually good
-  const iframe = document.querySelector("iframe[data-all-stations-frame]");
-  iframe.src = href;
-  iframe.addEventListener("load", function() {
-    document.querySelector("dialog[data-all-stations-dialog]").showModal();
-  }, { once: true });
-})

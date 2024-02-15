@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 
 <body>
-  <div>
+  <div class="dropIn">
     <header>
       <div>
         <p>
@@ -83,8 +83,10 @@
       made by <a href="https://pbt.neocities.org/">pbt</a> /
     </footer>
   </div>
+  <div class="blur-bottom"></div>
   <aside class="search" id="search-launcher">
-    <a hx-push-url="true" href="{{url_for('stations')}}" hx-get="{{url_for('stations')}}" hx-target="body" class="search-btn">Stations...</a>
+    <a hx-push-url="true" href="{{url_for('stations', prev=stop_ids)}}" hx-get="{{url_for('stations', prev=stop_ids)}}"
+      hx-target="body" class="search-btn">Stations...</a>
   </aside>
   <dialog class="all-stations" data-all-stations-dialog>
     <form method="dialog">

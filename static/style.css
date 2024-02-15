@@ -12,6 +12,18 @@ time[data-replace] {
   }
 }
 
+@keyframes dropIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .htmx-swapping {
   opacity: 0;
   transition: opacity 1s ease-out;
@@ -45,9 +57,8 @@ body {
   font-family: 'Helvetica Neue', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
 }
 
-
 :root {
-  --header-size: 2rem;
+  --header-size: 1.5rem;
 }
 
 header,
@@ -62,6 +73,10 @@ header,
 main,
 footer {
   padding: 1vmax;
+}
+
+.dropIn {
+  animation: 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53) 0s dropIn;
 }
 
 header {
@@ -236,6 +251,7 @@ section.arrivals-simple {
 
 footer {
   padding-top: 1ch;
+  min-height: 8rem;
   font-size: 0.8rem;
 
   &,
@@ -253,18 +269,39 @@ footer {
   color: #fff;
 }
 
-#ota-search, #search-launcher {
-  background: linear-gradient(rgb(33 33 33), rgb(33 33 33 / 0.5));
-  backdrop-filter: blur(20px) opacity(0.9);
-  -webkit-backdrop-filter: blur(20px) opacity(0.9);
+#ota-search,
+#search-launcher {
+  font-size: 1rem;
+  padding: 1ch 1ch 3ch 1ch;
+  display: flex;
+  gap: 1ch;
+  z-index: 999;
   position: fixed;
   left: 0;
   bottom: 0;
   right: 0;
-  font-size: 1rem;
-  padding: 1ch;
-  display: flex;
-  gap: 1ch;
+}
+
+.blur-top,
+.blur-bottom {
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  height: 3rem;
+  position: fixed;
+  left: 0;
+  right: 0;
+}
+
+.blur-top {
+  -webkit-mask-image: linear-gradient(to top, rgb(0 0 0/ 0), rgb(0 0 0));
+  mask-image: linear-gradient(to top, rgb(0 0 0/ 0), rgb(0 0 0));
+  top: 0;
+}
+
+.blur-bottom {
+  -webkit-mask-image: linear-gradient(to bottom, rgb(0 0 0/ 0), rgb(0 0 0));
+  mask-image: linear-gradient(to bottom, rgb(0 0 0/ 0), rgb(0 0 0));
+  bottom: 0;
 }
 
 #ota-search:has(input:focus) {
@@ -272,23 +309,32 @@ footer {
   transition: 0.2s all;
 }
 
-#ota-search input, #search-launcher .search-btn {
-flex: 1;
+#ota-search input,
+#search-launcher .search-btn,
+.btn {
   display: block;
   color: #fff;
   text-decoration: none;
-  background: linear-gradient(rgb(33 33 33), rgb(33 33 33 / 0.5));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: linear-gradient(rgb(33 33 33/0.8), rgb(33 33 33/0.5));
   border-radius: .25ch;
   border: .1ch solid rgb(255 255 255 / 0.3);
-  box-shadow: 0 0 .1ch rgb(0 0 0 / 0.1);
+  box-shadow: 0 0 .2ch rgb(0 0 0 / 0.3);
   margin: 0;
   padding: 0.5ch;
   font-family: 'Helvetica Neue', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
   font-size: calc(var(--header-size) * 0.75);
 }
 
+
+#ota-search input,
+#search-launcher .search-btn {
+  flex: 1;
+}
+
 .search-btn {
-  color: #ccc;   
+  color: #ccc;
 }
 
 .back {
@@ -306,6 +352,7 @@ flex: 1;
     width: 2rem;
   }
 }
+
 dialog {
   padding: 0;
   background: rgb(33 33 33);
@@ -373,8 +420,8 @@ dialog {
 
 @keyframes slideUp {
   from {
-    transform: translateY(5vh);  
-      opacity: 0;
+    transform: translateY(2vh);
+    opacity: 0;
   }
 
   to {
@@ -396,29 +443,31 @@ dialog {
 }
 
 .stations-list {
-  padding: 1ch 1ch 5rem 1ch;
+  padding: 3rem 1ch;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
 
-  & > div {
-  padding-top: 2rem;
+  &>div {
+    padding-top: 2rem;
     animation: 0.25s cubic-bezier(0.55, 0.085, 0.68, 0.53) 0s slideUp;
   }
 
-  & h6 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding: 1.5ch;
-    background: linear-gradient(rgb(33 33 33), rgb(33 33 33 ), rgb(33 33 33/ 0));
-  }
 }
 
-.transparent {
-  background: transparent;
+.stations-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  font-size: var(--header-size);
+  background: rgb(17 17 17 / .9);
+  font-weight: bold;
+  letter-spacing: -0.05ch;
+  padding: 1ch;
+  z-index: 999;
 }
+
 
 [data-stn] {
   &>a {
@@ -442,5 +491,3 @@ dialog {
     display: none;
   }
 }
-
-
