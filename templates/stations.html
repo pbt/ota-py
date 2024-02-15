@@ -40,10 +40,12 @@
 
     window.setTimeout(() => {
       requestAnimationFrame(() => document.querySelector("#ota-search").className = "js");
+      requestAnimationFrame(() => {resizeHandler()});
     }, 200);
 
     const blurOnScroll = (evt) => {
       document.querySelector("input[type=search]").blur();
+      requestAnimationFrame(() => {resizeHandler()});
     }
 
     const resizeHandler = () => {
