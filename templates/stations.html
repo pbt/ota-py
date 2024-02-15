@@ -39,8 +39,7 @@
   <script>
 
     window.setTimeout(() => {
-      requestAnimationFrame(() => document.querySelector("input[type=search]").focus());
-      document.querySelector("#ota-search").className = "js"
+      requestAnimationFrame(() => document.querySelector("#ota-search").className = "js");
     }, 200);
 
     const blurOnScroll = (evt) => {
@@ -58,11 +57,9 @@
         resizeHandler();
         document.addEventListener("scroll", blurOnScroll);
       }, 100);
-      window.visualViewport.addEventListener("resize", resizeHandler);
     });
 
     document.querySelector("input[type=search]").addEventListener("blur", (evt) => {
-      window.visualViewport.removeEventListener("resize", resizeHandler);
       document.removeEventListener("scroll", blurOnScroll);
     })
 
