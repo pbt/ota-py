@@ -37,8 +37,10 @@
     {% endautoescape %}
   </script>
   <script>
+
     window.setTimeout(() => {
       requestAnimationFrame(() => document.querySelector("input[type=search]").focus());
+      document.querySelector("#ota-search").className = "js"
     }, 200);
 
     const blurOnScroll = (evt) => {
@@ -51,8 +53,7 @@
     }
 
     document.querySelector("input[type=search]").addEventListener("focus", (evt) => {
-      const top = `calc(${window.visualViewport.height}px - ${document.querySelector("#ota-search").clientHeight}px - 0.1ch)`;
-      document.querySelector("#ota-search").style.top = top;
+      resizeHandler();
       window.setTimeout(() => {
         resizeHandler();
         document.addEventListener("scroll", blurOnScroll);
@@ -61,7 +62,6 @@
     });
 
     document.querySelector("input[type=search]").addEventListener("blur", (evt) => {
-      document.querySelector("#ota-search").style.top = "auto";
       window.visualViewport.removeEventListener("resize", resizeHandler);
       document.removeEventListener("scroll", blurOnScroll);
     })
@@ -69,6 +69,7 @@
     const stations = JSON.parse(document.getElementById("ota-stations-data").textContent);
 
     function onChange(evt) {
+      resizeHandler()
       document.querySelector("input[type=search]").scrollIntoView(false);
       const ids = Object.values(stations).filter(({name}) => {
         return name.toLowerCase().includes(evt.target.value.toLowerCase())
